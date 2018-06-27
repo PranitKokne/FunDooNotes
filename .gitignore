@@ -1,0 +1,7 @@
+*.metadata
+*.recommenders
+RemoteSystemsTempFiles/*
+Servers/*
+Fundoonotes/RemoteSystemsTempFiles/*
+Fundoonotes/Servers/*
+*.project

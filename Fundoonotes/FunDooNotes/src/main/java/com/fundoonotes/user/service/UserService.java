@@ -1,7 +1,5 @@
 package com.fundoonotes.user.service;
 
-import javax.transaction.Transactional;
-
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.fundoonotes.user.dao.UserDao;
 import com.fundoonotes.user.model.User;
 
-@Transactional
 @Service
 public class UserService {
 
@@ -33,7 +30,6 @@ public class UserService {
 
 	public User login(User user) {
 		User dbUser = getByEmail(user.getEmail());
-		System.out.println(BCrypt.checkpw(user.getPassword(), dbUser.getPassword()));
 		if (dbUser != null && BCrypt.checkpw(user.getPassword(), dbUser.getPassword())) {
 			dbUser.setPassword(user.getPassword());
 			return dbUser;

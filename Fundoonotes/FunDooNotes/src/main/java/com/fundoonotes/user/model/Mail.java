@@ -1,4 +1,4 @@
-package com.fundoonotes.user.controller;
+package com.fundoonotes.user.model;
 
 public class Mail {
 

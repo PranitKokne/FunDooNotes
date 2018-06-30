@@ -9,7 +9,7 @@ import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import com.fundoonotes.user.controller.Mail;
+import com.fundoonotes.user.model.Mail;
 
 public class EmailUtil {
 

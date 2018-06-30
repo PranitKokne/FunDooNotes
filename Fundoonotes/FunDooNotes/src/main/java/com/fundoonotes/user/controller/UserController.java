@@ -2,7 +2,6 @@ package com.fundoonotes.user.controller;
 
 import javax.validation.Valid;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fundoonotes.user.config.EmailUtil;
 import com.fundoonotes.user.model.LoginDTO;
+import com.fundoonotes.user.model.Mail;
 import com.fundoonotes.user.model.User;
 import com.fundoonotes.user.model.UserDTO;
 import com.fundoonotes.user.service.UserService;
@@ -28,9 +28,6 @@ public class UserController {
 	private HttpHeaders httpHeaders;
 
 	@Autowired
-	private ModelMapper modelMapper;
-
-	@Autowired
 	private UserService userService;
 
 	@Autowired
@@ -41,12 +38,11 @@ public class UserController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<Void> registerUser(@Valid @RequestBody UserDTO userDTO) {
-		User user = modelMapper.map(userDTO, User.class);
-		boolean result = userService.register(user);
+		boolean result = userService.register(userDTO);
 		if (result) {
 			httpHeaders.add("Location", ServletUriComponentsBuilder.fromCurrentRequest().toUriString().toString());
 			String loginURI = ServletUriComponentsBuilder.fromCurrentRequest().toUriString().toString();
-			mail.setTo(user.getEmail());
+			mail.setTo(userDTO.getEmail());
 			mail.setSubject("Registration Successful");
 			mail.setBody("<html><body>" + "<p>Please click on the below link to activate your account</p>" + "<h2>"
 					+ loginURI + "</h2>" + "</body></html>");
@@ -58,8 +54,7 @@ public class UserController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<User> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
-		User user = modelMapper.map(loginDTO, User.class);
-		User loggedUser = userService.login(user);
+		User loggedUser = userService.login(loginDTO);
 		if (loggedUser != null) {
 			return new ResponseEntity<User>(loggedUser, HttpStatus.OK);
 		}

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 
-import com.fundoonotes.user.controller.Mail;
+import com.fundoonotes.user.model.Mail;
 
 @Configuration
 @ComponentScan(basePackages = "com.fundoonotes")

@@ -4,12 +4,12 @@ import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import com.fundoonotes.user.model.Mail;
+import com.fundoonotes.util.EmailProducer;
 
 @Service
 public class EmailService {
@@ -22,15 +22,18 @@ public class EmailService {
 	@Autowired
 	private JavaMailSender mailSender;
 
+	@Autowired
+	private EmailProducer emailProducer;
+
 	public boolean crateEmail(String email) {
 		mail.setTo(email);
 		mail.setSubject("Registration Successful");
 		mail.setBody("<html><body>" + "<p>Please click on the below link to activate your account</p>" + "<h2>"
 				+ "</h2>" + "</body></html>");
-		if (sendEmail(mail)) {
-			return true;
-		}
-		return false;
+
+		emailProducer.produceEmail(mail);
+		return true;
+
 	}
 
 	public boolean sendEmail(Mail mail) {

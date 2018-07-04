@@ -1,14 +1,14 @@
 package com.fundoonotes.user.model;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 
 public class LoginDTO {
 
 	@NotEmpty
-	@Email(message = "please enter a valid email")
+	@Pattern(regexp="[a-zA-Z0-9][a-zA-Z0-9_.]*@gmail[.]com",message="Enter a valid email address")
 	private String email;
 
 	@NotEmpty

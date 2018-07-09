@@ -20,12 +20,21 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
 	public static final String topicExchangeName = "spring-amqp-exchange";
-	public static final String queueName = "genericQueue";
-	public static final String routingKey = "rabbit.key.generic";
+
+	public static final String queueNameOne = "saveUpdateQueue";
+	public static final String queueNameThree = "deleteQueue";
+
+	public static final String routingKeyOne = "rabbit.key.saveupdate";
+	public static final String routingKeyThree = "rabbit.key.delete";
 
 	@Bean
-	Queue queue() {
-		return new Queue(queueName, false);
+	Queue queueOne() {
+		return new Queue(queueNameOne, false);
+	}
+
+	@Bean
+	Queue queueThree() {
+		return new Queue(queueNameThree, false);
 	}
 
 	@Bean
@@ -34,8 +43,13 @@ public class RabbitMQConfig {
 	}
 
 	@Bean
-	Binding binding(TopicExchange exchange, Queue queue) {
-		return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+	public Binding bindingOne() {
+		return BindingBuilder.bind(queueOne()).to(topicExchange()).with(routingKeyOne);
+	}
+
+	@Bean
+	public Binding bindingThree() {
+		return BindingBuilder.bind(queueThree()).to(topicExchange()).with(routingKeyThree);
 	}
 
 	@Bean

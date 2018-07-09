@@ -1,4 +1,4 @@
-package com.redis.test;
+package com.redis.cache.repo;
 
 import java.util.Map;
 
@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.redis.cache.model.Customer;
 
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository {
@@ -51,5 +53,4 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 	public void delete(Long id) {
 		hashOperations.delete(KEY, id);
 	}
-
 }

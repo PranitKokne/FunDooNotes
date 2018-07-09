@@ -1,4 +1,4 @@
-package com.redis.test;
+package com.redis.cache.model;
 
 import java.io.Serializable;
 
@@ -10,7 +10,15 @@ public class Customer implements Serializable {
 	private String firstName;
 	private String lastName;
 
-	protected Customer() {
+	public Customer(long id, String firstName, String lastName) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+
+	public Customer() {
+
 	}
 
 	public long getId() {
@@ -37,14 +45,9 @@ public class Customer implements Serializable {
 		this.lastName = lastName;
 	}
 
-	public Customer(long id, String firstName, String lastName) {
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
-
 	@Override
 	public String toString() {
-		return String.format("Customer[id=%d, firstName='%s', lastName='%s']", id, firstName, lastName);
+		return "Customer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
+	
 }

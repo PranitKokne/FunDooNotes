@@ -1,28 +1,23 @@
 package com.fundoonotes.model;
 
-public class User {
+import java.io.Serializable;
 
-	private int id;
-	private String name;
-	private String email;
-	private String password;
-	private boolean isVerified;
-	private String phoneNumber;
+public class User implements Serializable {
 
-	public int getId() {
+	private static final long serialVersionUID = 1L;
+	
+	long id;
+	String email;
+	String password;
+	String name;
+	String phoneNumber;
+
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getEmail() {
@@ -41,12 +36,12 @@ public class User {
 		this.password = password;
 	}
 
-	public boolean isVerified() {
-		return isVerified;
+	public String getName() {
+		return name;
 	}
 
-	public void setVerified(boolean isVerified) {
-		this.isVerified = isVerified;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getPhoneNumber() {
@@ -56,5 +51,4 @@ public class User {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-
 }

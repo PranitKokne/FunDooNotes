@@ -1,4 +1,4 @@
-package com.redis.test;
+package com.redis.cache.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -8,14 +8,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 
 @Configuration
-@ComponentScan(basePackages="com.redis")
+@ComponentScan("com.redis.cache")
 public class RedisConfig {
-
+ 
 	@Bean
 	JedisConnectionFactory jedisConnectionFactory() {
 		return new JedisConnectionFactory();
 	}
-
+ 
 	@Bean
 	public RedisTemplate<String, Object> redisTemplate() {
 		final RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
@@ -23,5 +23,4 @@ public class RedisConfig {
 		template.setValueSerializer(new GenericToStringSerializer<Object>(Object.class));
 		return template;
 	}
-
 }

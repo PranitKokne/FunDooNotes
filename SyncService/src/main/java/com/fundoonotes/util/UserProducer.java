@@ -1,5 +1,8 @@
 package com.fundoonotes.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.logging.Logger;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,11 @@ public class UserProducer {
 
 	public <T> void sendToProducer(T obj) {
 		logger.info("sending the object to the topic exchange");
-		amqpTemplate.convertAndSend(RabbitMQConfig.topicExchangeName, RabbitMQConfig.routingKey, obj);
+		Map<String, Object> message = new HashMap<String, Object>();
+		message.put("object", obj);
+		message.put("type", "redis");
+		message.put("operation", "insert");
+		amqpTemplate.convertAndSend(RabbitMQConfig.topicExchangeName, RabbitMQConfig.routingKey, message);
 		logger.info("object sent to the topic exchange successfully");
 	}
 

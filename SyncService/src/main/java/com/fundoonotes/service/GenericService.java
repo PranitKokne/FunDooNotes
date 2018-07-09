@@ -14,6 +14,7 @@ public class GenericService {
 	@Autowired
 	private UserProducer userProducer;
 
+	//insert
 	public <T> void sendtoService(T obj) {
 		// here the user and notes will be saved to the primary database as well
 		// as a secondary database (redis:user::elastic search:notes)
@@ -23,4 +24,12 @@ public class GenericService {
 		logger.info("object send to the producer");
 		userProducer.sendToProducer(obj);
 	}
+	
+	//delete
+	
+	//update
+	
+	//get
+	
+	
 }

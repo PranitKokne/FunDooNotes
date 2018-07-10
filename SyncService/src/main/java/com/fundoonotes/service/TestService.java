@@ -1,8 +1,12 @@
 package com.fundoonotes.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.fundoonotes.model.Note;
 import com.fundoonotes.model.User;
 import com.fundoonotes.util.NoteProducer;
@@ -21,7 +25,13 @@ public class TestService {
 
 	public void sendUser(User user) {
 		logger.info("sending user to the producer");
-		userProducer.sendToUserProducer(user);
+		Map<String, Object> message = new HashMap<String, Object>();
+		message.put("type", "redis");
+		message.put("operation", "insert");
+		message.put("object", user);
+		message.put("HK", user.getId());
+		message.put("KEY", "USER");
+		userProducer.sendToUserProducer(message);
 		logger.info("user send successfully");
 	}
 

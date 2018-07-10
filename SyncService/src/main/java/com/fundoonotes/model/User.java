@@ -8,15 +8,9 @@ public class User {
 	private String password;
 	private String phoneNumber;
 	private boolean isVerified;
-	private String key;
 	
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
+	
+	
 
 	public long getId() {
 		return id;
@@ -83,7 +77,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", phoneNumber="
-				+ phoneNumber + ", isVerified=" + isVerified + ", key=" + key + "]";
+				+ phoneNumber + ", isVerified=" + isVerified + "]";
 	}
 
 	

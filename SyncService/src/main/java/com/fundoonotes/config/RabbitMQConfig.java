@@ -19,37 +19,37 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = "com.fundoonotes")
 public class RabbitMQConfig {
 
-	public static final String topicExchangeName = "spring-amqp-exchange";
+	public static final String TOPIC_EXCHANGE_NAME = "spring-amqp-exchange";
 
-	public static final String queueNameOne = "saveUpdateQueue";
-	public static final String queueNameThree = "deleteQueue";
+	public static final String USER_QUEUE = "userQueue";
+	public static final String ROUTING_KEY_USER = "fundoonotes.user";
 
-	public static final String routingKeyOne = "rabbit.key.saveupdate";
-	public static final String routingKeyThree = "rabbit.key.delete";
-
-	@Bean
-	Queue queueOne() {
-		return new Queue(queueNameOne, false);
-	}
-
-	@Bean
-	Queue queueThree() {
-		return new Queue(queueNameThree, false);
-	}
+	public static final String NOTE_QUEUE = "noteQueue";
+	public static final String ROUTING_KEY_NOTE = "fundoonotes.note";
 
 	@Bean
 	TopicExchange topicExchange() {
-		return new TopicExchange(topicExchangeName);
+		return new TopicExchange(TOPIC_EXCHANGE_NAME);
 	}
 
 	@Bean
-	public Binding bindingOne() {
-		return BindingBuilder.bind(queueOne()).to(topicExchange()).with(routingKeyOne);
+	Queue userQueue() {
+		return new Queue(USER_QUEUE);
 	}
 
 	@Bean
-	public Binding bindingThree() {
-		return BindingBuilder.bind(queueThree()).to(topicExchange()).with(routingKeyThree);
+	Queue noteQueue() {
+		return new Queue(NOTE_QUEUE);
+	}
+
+	@Bean
+	Binding bindUserQueue() {
+		return BindingBuilder.bind(userQueue()).to(topicExchange()).with(ROUTING_KEY_USER);
+	}
+
+	@Bean
+	Binding bindNoteQueue() {
+		return BindingBuilder.bind(noteQueue()).to(topicExchange()).with(ROUTING_KEY_NOTE);
 	}
 
 	@Bean

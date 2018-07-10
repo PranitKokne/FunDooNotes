@@ -7,23 +7,21 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fundoonotes.config.RabbitMQConfig;
-import com.fundoonotes.model.User;
+import com.fundoonotes.model.Note;
 
 @Component
-public class UserProducer {
+public class NoteProducer {
 
 	@Autowired
 	private AmqpTemplate amqpTemplate;
 
-	public void sendToUserProducer(User user) {
+	public void sendToNoteProducer(Note note) {
 		Map<String, Object> message = new HashMap<String, Object>();
-		message.put("type", "redis");
+		message.put("type", "elastic");
 		message.put("operation", "insert");
-		message.put("object", user);
-		message.put("HK", user.getId());
-		message.put("KEY", user.getKey());
-		amqpTemplate.convertAndSend(RabbitMQConfig.TOPIC_EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY_USER, message);
+		message.put("Note", note);
+		message.put("id", note.getId());
+		amqpTemplate.convertAndSend(message);
 	}
 
 }

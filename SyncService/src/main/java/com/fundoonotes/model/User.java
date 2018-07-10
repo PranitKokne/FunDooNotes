@@ -1,16 +1,22 @@
 package com.fundoonotes.model;
 
-import java.io.Serializable;
-
-public class User implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class User {
 	
-	long id;
-	String email;
-	String password;
-	String name;
-	String phoneNumber;
+	private long id;
+	private String name;
+	private String email;
+	private String password;
+	private String phoneNumber;
+	private boolean isVerified;
+	private String key;
+	
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
 
 	public long getId() {
 		return id;
@@ -18,6 +24,14 @@ public class User implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getEmail() {
@@ -36,14 +50,6 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
@@ -51,4 +57,35 @@ public class User implements Serializable {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+
+	public boolean isVerified() {
+		return isVerified;
+	}
+
+	public void setVerified(boolean isVerified) {
+		this.isVerified = isVerified;
+	}
+
+	public User(long id, String name, String email, String password, String phoneNumber, boolean isVerified) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.phoneNumber = phoneNumber;
+		this.isVerified = isVerified;
+	}
+
+	public User() {
+		super();
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", phoneNumber="
+				+ phoneNumber + ", isVerified=" + isVerified + ", key=" + key + "]";
+	}
+
+	
+
 }

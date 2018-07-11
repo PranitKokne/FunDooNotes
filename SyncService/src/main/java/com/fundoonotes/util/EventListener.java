@@ -21,7 +21,7 @@ public class EventListener {
 	public void listenToUser(Message<Map<String, Object>> message) {
 		LOGGER.info(message.getPayload());
 		LOGGER.info(message.getHeaders());
-		syncService.sendToSyncService(message.getPayload());
+		syncService.sendUserToSyncService(message.getPayload());
 	}
 
 	@RabbitListener(queues = RabbitMQConfig.NOTE_QUEUE, containerFactory = "containerFactory")

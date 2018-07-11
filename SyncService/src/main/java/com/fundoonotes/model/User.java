@@ -1,22 +1,28 @@
 package com.fundoonotes.model;
 
 public class User {
-	
-	private long id;
+
+	private String id;
 	private String name;
 	private String email;
 	private String password;
 	private String phoneNumber;
 	private boolean isVerified;
-	
-	
-	
+	private String operation;
 
-	public long getId() {
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -60,7 +66,8 @@ public class User {
 		this.isVerified = isVerified;
 	}
 
-	public User(long id, String name, String email, String password, String phoneNumber, boolean isVerified) {
+	public User(String id, String name, String email, String password, String phoneNumber, boolean isVerified,
+			String operation) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -68,6 +75,7 @@ public class User {
 		this.password = password;
 		this.phoneNumber = phoneNumber;
 		this.isVerified = isVerified;
+		this.operation = operation;
 	}
 
 	public User() {
@@ -77,9 +85,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", phoneNumber="
-				+ phoneNumber + ", isVerified=" + isVerified + "]";
+				+ phoneNumber + ", isVerified=" + isVerified + ", operation=" + operation + "]";
 	}
-
-	
 
 }

@@ -27,10 +27,10 @@ public class TestService {
 		logger.info("sending user to the producer");
 		Map<String, Object> message = new HashMap<String, Object>();
 		message.put("type", "redis");
-		message.put("operation", "insert");
+		message.put("operation", user.getOperation());
 		message.put("object", user);
 		message.put("HK", user.getId());
-		message.put("KEY", "USER");
+		message.put("KEY", "user");
 		userProducer.sendToUserProducer(message);
 		logger.info("user send successfully");
 	}

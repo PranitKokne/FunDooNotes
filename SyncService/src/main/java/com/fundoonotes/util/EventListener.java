@@ -14,14 +14,14 @@ public class EventListener {
 
 	@Autowired
 	private SyncService syncService;
-	
+
 	private static final Logger LOGGER = Logger.getLogger(EventListener.class);
 
 	@RabbitListener(queues = RabbitMQConfig.USER_QUEUE, containerFactory = "containerFactory")
 	public void listenToUser(Message<Map<String, Object>> message) {
 		LOGGER.info(message.getPayload());
 		LOGGER.info(message.getHeaders());
-		syncService.save(message.getPayload());
+		syncService.sendToSyncService(message.getPayload());
 	}
 
 	@RabbitListener(queues = RabbitMQConfig.NOTE_QUEUE, containerFactory = "containerFactory")

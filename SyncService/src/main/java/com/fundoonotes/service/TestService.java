@@ -37,7 +37,13 @@ public class TestService {
 
 	public void sendNotes(Note note) {
 		logger.info("sending note to the producer");
-		noteProducer.sendToNoteProducer(note);
+		Map<String, Object> message = new HashMap<String, Object>();
+		message.put("operation", note.getOperation());
+		message.put("index", "fundoonotes");
+		message.put("type", "note");
+		message.put("id", String.valueOf(note.getId()));
+		message.put("document", note);
+		noteProducer.sendToNoteProducer(message);
 		logger.info("note send successfully");
 	}
 }

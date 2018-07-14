@@ -2,6 +2,9 @@ package com.fundoonotes.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Note {
 
 	private long id;
@@ -13,6 +16,15 @@ public class Note {
 	private boolean isArchieved;
 	private boolean isTrash;
 	private boolean isPinned;
+	private String operation;
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
 
 	public boolean isPinned() {
 		return isPinned;
@@ -92,6 +104,5 @@ public class Note {
 				+ ", createdDate=" + createdDate + ", lastModifiedDate=" + lastModifiedDate + ", isArchieved="
 				+ isArchieved + ", isTrash=" + isTrash + ", isPinned=" + isPinned + "]";
 	}
-
 
 }

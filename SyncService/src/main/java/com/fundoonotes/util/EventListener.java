@@ -28,6 +28,7 @@ public class EventListener {
 	public void listenToNote(Message<Map<String, Object>> message) {
 		LOGGER.info(message.getPayload());
 		LOGGER.info(message.getHeaders());
+		syncService.sendNoteToSyncService(message.getPayload());
 	}
 
 }

@@ -26,7 +26,6 @@ public class TestService {
 	public void sendUser(User user) {
 		logger.info("sending user to the producer");
 		Map<String, Object> message = new HashMap<String, Object>();
-		message.put("type", "redis");
 		message.put("operation", user.getOperation());
 		message.put("object", user);
 		message.put("HK", user.getId());

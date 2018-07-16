@@ -19,6 +19,8 @@ public class SyncService {
 	private static final Logger LOGGER = Logger.getLogger(SyncService.class);
 
 	public void sendUserToSyncService(Map<String, Object> message) {
+		LOGGER.info("****PROCESSING THE USER****");
+		LOGGER.info(message.toString());
 		String key = (String) message.get("KEY");
 		String hkey = (String) message.get("HK");
 		Object hvalue = message.get("object");
@@ -34,6 +36,7 @@ public class SyncService {
 	}
 
 	public void sendNoteToSyncService(Map<String, Object> message) {
+		LOGGER.info("****PROCESSING THE NOTE****");
 		String index = (String) message.get("index");
 		String type = (String) message.get("type");
 		String id = (String) message.get("id");

@@ -3,19 +3,22 @@ package com.fundoonotes.repository;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.jboss.logging.Logger;
 import org.springframework.stereotype.Repository;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class NoteRepositoryImpl implements NoteRepository {
+
+	private static final Logger LOGGER = Logger.getLogger(NoteRepositoryImpl.class);
 
 	private RestHighLevelClient restHighlevelClient;
 	private ObjectMapper objectMapper;
@@ -27,7 +30,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
 	@Override
 	public void insertNote(String index, String type, String id, Object note) {
-		Map dataMap = objectMapper.convertValue(note, Map.class);
+		Map<?,?> dataMap = objectMapper.convertValue(note, Map.class);
 		IndexRequest indexRequest = new IndexRequest(index, type, id).source(dataMap);
 		try {
 			restHighlevelClient.index(indexRequest);
@@ -51,6 +54,9 @@ public class NoteRepositoryImpl implements NoteRepository {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (ElasticsearchStatusException e) {
+			LOGGER.info(error);
+			return error;
 		}
 		return error;
 	}

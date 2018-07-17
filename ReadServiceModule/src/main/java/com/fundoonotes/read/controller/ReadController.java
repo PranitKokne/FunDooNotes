@@ -2,6 +2,8 @@ package com.fundoonotes.read.controller;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +16,11 @@ import com.fundoonotes.read.util.NoteNotFoundException;
 import com.fundoonotes.read.util.UserNotFoundException;
 
 @RestController
+@PropertySource({ "classpath:exception.properties" })
 public class ReadController {
+
+	@Autowired
+	private Environment env;
 
 	@Autowired
 	private NoteRepository noteRepository;
@@ -29,7 +35,7 @@ public class ReadController {
 		String id = pathValues.get("id");
 		Map<String, Object> note = noteRepository.getNoteById(index, type, id);
 		if (note == null) {
-			throw new NoteNotFoundException("Note is not present");
+			throw new NoteNotFoundException(env.getProperty("note.not.found"));
 		}
 		return new ResponseEntity<>(note, HttpStatus.OK);
 	}
@@ -39,7 +45,7 @@ public class ReadController {
 			@PathVariable("hashKey") String hashKey) {
 		Object user = userRepository.getUserById(key, hashKey);
 		if (user == null) {
-			throw new UserNotFoundException("User is not present");
+			throw new UserNotFoundException(env.getProperty("user.not.found"));
 		}
 		return new ResponseEntity<Object>(user, HttpStatus.OK);
 	}

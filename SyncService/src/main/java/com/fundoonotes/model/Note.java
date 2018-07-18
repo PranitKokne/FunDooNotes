@@ -2,6 +2,7 @@ package com.fundoonotes.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -11,7 +12,9 @@ public class Note {
 	private String title;
 	private String description;
 	private String colour;
+	@JsonFormat(pattern = "dd/MM/YYYY hh:mm:ss")
 	private Date createdDate;
+	@JsonFormat(pattern = "dd/MM/YYYY hh:mm:ss")
 	private Date lastModifiedDate;
 	private boolean isArchieved;
 	private boolean isTrash;

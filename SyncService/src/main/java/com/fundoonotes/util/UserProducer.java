@@ -14,7 +14,7 @@ public class UserProducer {
 	@Autowired
 	private AmqpTemplate amqpTemplate;
 
-	public void sendToUserProducer(Map<String, Object> message) {
+	public void sendUserToProducer(Map<String, Object> message) {
 		amqpTemplate.convertAndSend(RabbitMQConfig.TOPIC_EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY_USER, message);
 	}
 

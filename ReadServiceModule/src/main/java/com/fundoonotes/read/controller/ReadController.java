@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.fundoonotes.read.repository.NoteRepository;
 import com.fundoonotes.read.repository.UserRepository;
-import com.fundoonotes.read.util.NoteNotFoundException;
-import com.fundoonotes.read.util.UserNotFoundException;
+import com.fundoonotes.read.util.ResourceNotFoundException;
 
 @RestController
 @PropertySource({ "classpath:exception.properties" })
@@ -28,14 +27,14 @@ public class ReadController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@RequestMapping(value = "todo/{index}/{type}/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/todo/{index}/{type}/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getNoteById(@PathVariable Map<String, String> pathValues) {
 		String index = pathValues.get("index");
 		String type = pathValues.get("type");
 		String id = pathValues.get("id");
 		Map<String, Object> note = noteRepository.getNoteById(index, type, id);
 		if (note == null) {
-			throw new NoteNotFoundException(env.getProperty("note.not.found"));
+			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
 		}
 		return new ResponseEntity<>(note, HttpStatus.OK);
 	}
@@ -45,7 +44,7 @@ public class ReadController {
 			@PathVariable("hashKey") String hashKey) {
 		Object user = userRepository.getUserById(key, hashKey);
 		if (user == null) {
-			throw new UserNotFoundException(env.getProperty("user.not.found"));
+			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
 		}
 		return new ResponseEntity<Object>(user, HttpStatus.OK);
 	}

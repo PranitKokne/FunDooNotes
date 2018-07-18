@@ -3,7 +3,7 @@ package com.fundoonotes.repository;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.elasticsearch.ElasticsearchStatusException;
+
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -12,6 +12,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.jboss.logging.Logger;
 import org.springframework.stereotype.Repository;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,7 +31,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
 	@Override
 	public void insertNote(String index, String type, String id, Object note) {
-		Map<?,?> dataMap = objectMapper.convertValue(note, Map.class);
+		Map<?, ?> dataMap = objectMapper.convertValue(note, Map.class);
 		IndexRequest indexRequest = new IndexRequest(index, type, id).source(dataMap);
 		try {
 			restHighlevelClient.index(indexRequest);
@@ -42,10 +43,12 @@ public class NoteRepositoryImpl implements NoteRepository {
 	@Override
 	public Map<String, Object> updateNote(String index, String type, String id, Object note) {
 		UpdateRequest updateRequest = new UpdateRequest(index, type, id).fetchSource(true);
-		Map<String, Object> error = new HashMap<>();
-		error.put("error", "error in updating note");
-		try {
-			String noteJson = objectMapper.writeValueAsString(note);
+		String noteJson;
+		Map<String,Object> error = new HashMap<>();
+		error.put("Error", "Unable to update book");
+		
+ 		try {
+			noteJson = objectMapper.writeValueAsString(note);
 			updateRequest.doc(noteJson, XContentType.JSON);
 			UpdateResponse updateResponse = restHighlevelClient.update(updateRequest);
 			Map<String, Object> sourceAsMap = updateResponse.getGetResult().sourceAsMap();
@@ -54,9 +57,6 @@ public class NoteRepositoryImpl implements NoteRepository {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (ElasticsearchStatusException e) {
-			LOGGER.info(error);
-			return error;
 		}
 		return error;
 	}
@@ -69,7 +69,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 	}
 
 }

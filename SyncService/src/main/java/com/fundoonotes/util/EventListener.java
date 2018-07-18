@@ -19,15 +19,17 @@ public class EventListener {
 
 	@RabbitListener(queues = RabbitMQConfig.USER_QUEUE, containerFactory = "containerFactory")
 	public void listenToUser(Message<Map<String, Object>> message) {
-		LOGGER.info("User : "+message.getPayload());
-		LOGGER.info("User : "+message.getHeaders());
+		LOGGER.info("RECEIEVED THE USER FROM THE QUEUE");
+		LOGGER.info("User : " + message.getPayload());
+		LOGGER.info("User : " + message.getHeaders());
 		syncService.sendUserToSyncService(message.getPayload());
 	}
 
 	@RabbitListener(queues = RabbitMQConfig.NOTE_QUEUE, containerFactory = "containerFactory")
 	public void listenToNote(Message<Map<String, Object>> message) {
-		LOGGER.info("Note : "+message.getPayload());
-		LOGGER.info("Note : "+message.getHeaders());
+		LOGGER.info("RECEIEVED THE NOTE FROM THE QUEUE");
+		LOGGER.info("Note : " + message.getPayload());
+		LOGGER.info("Note : " + message.getHeaders());
 		syncService.sendNoteToSyncService(message.getPayload());
 	}
 

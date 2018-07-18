@@ -4,10 +4,10 @@ import java.util.Map;
 
 public interface NoteRepository {
 
-	public void insertNote(String index, String type, String id, Object note);
+	public void insertNote(String index, String type, String id, Object note) ;
 
-	public Map<String,Object> updateNote(String index, String type, String id, Object note);
+	public Map<String, Object> updateNote(String index, String type, String id, Object note);
 
-	public void deleteNote(String index, String type, String id);
+	public void deleteNote(String index, String type, String id) ;
 
 }

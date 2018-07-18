@@ -21,28 +21,28 @@ public class TestService {
 	@Autowired
 	private NoteProducer noteProducer;
 
-	private static final Logger logger = Logger.getLogger(TestService.class);
+	private static final Logger LOGGER = Logger.getLogger(TestService.class);
 
 	public void sendUser(User user) {
-		logger.info("sending user to the producer");
+		LOGGER.info("SENDING USER TO THE PRODUCER");
 		Map<String, Object> message = new HashMap<String, Object>();
-		message.put("operation", user.getOperation());
-		message.put("object", user);
-		message.put("HK", user.getId());
 		message.put("KEY", "user");
-		userProducer.sendToUserProducer(message);
-		logger.info("user send successfully");
+		message.put("HK", user.getId());
+		message.put("object", user);
+		message.put("operation", user.getOperation());
+		userProducer.sendUserToProducer(message);
+		LOGGER.info("USER SEND SUCCESSFULLY");
 	}
 
 	public void sendNotes(Note note) {
-		logger.info("sending note to the producer");
+		LOGGER.info("SENDING NOTE TO THE PRODUCER");
 		Map<String, Object> message = new HashMap<String, Object>();
-		message.put("operation", note.getOperation());
 		message.put("index", "fundoonotes");
 		message.put("type", "note");
 		message.put("id", String.valueOf(note.getId()));
 		message.put("document", note);
-		noteProducer.sendToNoteProducer(message);
-		logger.info("note send successfully");
+		message.put("operation", note.getOperation());
+		noteProducer.sendNoteToProducer(message);
+		LOGGER.info("NOTE SEND SUCCESSFULLY");
 	}
 }

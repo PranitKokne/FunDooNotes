@@ -12,7 +12,7 @@ public class NoteProducer {
 	@Autowired
 	private AmqpTemplate amqpTemplate;
 
-	public void sendToNoteProducer(Map<String, Object> message) {
+	public void sendNoteToProducer(Map<String, Object> message) {
 
 		amqpTemplate.convertAndSend(RabbitMQConfig.TOPIC_EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY_NOTE, message);
 	}

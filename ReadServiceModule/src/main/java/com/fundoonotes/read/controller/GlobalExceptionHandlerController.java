@@ -11,33 +11,26 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fundoonotes.read.model.ErrorDetails;
-import com.fundoonotes.read.util.NoteNotFoundException;
-import com.fundoonotes.read.util.UserNotFoundException;
+import com.fundoonotes.read.util.ResourceNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
 
 	private static final Logger LOGGER = Logger.getLogger(GlobalExceptionHandlerController.class);
 
-	@ExceptionHandler(NoteNotFoundException.class)
-	public ResponseEntity<ErrorDetails> handleNoteNotFoundException(NoteNotFoundException ex, WebRequest webRequest) {
-		LOGGER.error("NoteNotFoundException Occured");
-		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), webRequest.getDescription(false));
-		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
-	}
-
-	@ExceptionHandler(UserNotFoundException.class)
-	public ResponseEntity<ErrorDetails> handleUserNotFoundException(UserNotFoundException ex, WebRequest webRequest) {
-		LOGGER.error("UserNotFoundException Occured");
-		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), webRequest.getDescription(false));
-		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
-	}
-
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorDetails> handleAnyException(Exception ex, WebRequest webRequest) {
 		LOGGER.error("PREDEFIND EXCEPTION OCCURED SENDING 500");
 		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException ex,
+			WebRequest webRequest) {
+		LOGGER.error("ResourceNotFoundException Occured");
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 
 }

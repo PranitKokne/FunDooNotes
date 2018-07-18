@@ -47,7 +47,7 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public void delete(String key, String id) {
 		hashOperations.delete(key, id);
-		LOGGER.info("DELETED THE USER SUCCESSFULLY");
+		LOGGER.info("DELETED THE USER SUCCESSFULLY FROM THE REDIS");
 	}
 
 }

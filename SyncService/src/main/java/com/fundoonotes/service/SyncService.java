@@ -1,9 +1,11 @@
 package com.fundoonotes.service;
 
 import java.util.Map;
+
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.fundoonotes.repository.NoteRepository;
 import com.fundoonotes.repository.UserRepository;
 
@@ -20,7 +22,7 @@ public class SyncService {
 
 	public void sendUserToSyncService(Map<String, Object> message) {
 		LOGGER.info("****PROCESSING THE USER****");
-		LOGGER.info(message.toString());
+		LOGGER.info("USER FROM SYNC SERVICE" + message.toString());
 		String key = (String) message.get("KEY");
 		String hkey = (String) message.get("HK");
 		Object hvalue = message.get("object");
@@ -37,6 +39,7 @@ public class SyncService {
 
 	public void sendNoteToSyncService(Map<String, Object> message) {
 		LOGGER.info("****PROCESSING THE NOTE****");
+		LOGGER.info("NOTE FROM SYNC SERVICE" + message.toString());
 		String index = (String) message.get("index");
 		String type = (String) message.get("type");
 		String id = (String) message.get("id");

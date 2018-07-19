@@ -2,7 +2,7 @@ package com.fundoonotes.repository;
 
 import java.util.Map;
 
-public interface NoteRepository {
+public interface ElasticsearchRepository {
 
 	public void insertNote(String index, String type, String id, Object note) ;
 

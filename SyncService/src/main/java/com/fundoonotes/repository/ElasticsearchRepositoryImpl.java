@@ -17,14 +17,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
-public class NoteRepositoryImpl implements NoteRepository {
+public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 
-	private static final Logger LOGGER = Logger.getLogger(NoteRepositoryImpl.class);
+	private static final Logger LOGGER = Logger.getLogger(ElasticsearchRepositoryImpl.class);
 
 	private RestHighLevelClient restHighlevelClient;
 	private ObjectMapper objectMapper;
 
-	public NoteRepositoryImpl(ObjectMapper objectMapper, RestHighLevelClient restHighLevelClient) {
+	public ElasticsearchRepositoryImpl(ObjectMapper objectMapper, RestHighLevelClient restHighLevelClient) {
 		this.objectMapper = objectMapper;
 		this.restHighlevelClient = restHighLevelClient;
 	}
@@ -38,20 +38,22 @@ public class NoteRepositoryImpl implements NoteRepository {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		LOGGER.info("DOCUMENT ADDEDED SUCCESSFULLY TO THE INDEX");
 	}
 
 	@Override
 	public Map<String, Object> updateNote(String index, String type, String id, Object note) {
 		UpdateRequest updateRequest = new UpdateRequest(index, type, id).fetchSource(true);
 		String noteJson;
-		Map<String,Object> error = new HashMap<>();
-		error.put("Error", "Unable to update book");
-		
- 		try {
+		Map<String, Object> error = new HashMap<>();
+		error.put("Error", "Unable to update document");
+
+		try {
 			noteJson = objectMapper.writeValueAsString(note);
 			updateRequest.doc(noteJson, XContentType.JSON);
 			UpdateResponse updateResponse = restHighlevelClient.update(updateRequest);
 			Map<String, Object> sourceAsMap = updateResponse.getGetResult().sourceAsMap();
+			LOGGER.info("DOCUMENT UPDATED SUCCESSFULLY TO THE INDEX");
 			return sourceAsMap;
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
@@ -69,7 +71,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		LOGGER.info("DOCUMENT DELETED SUCCESSFULLY FROM THE INDEX");
 	}
 
 }

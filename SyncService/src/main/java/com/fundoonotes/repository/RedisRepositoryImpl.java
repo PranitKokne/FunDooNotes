@@ -11,15 +11,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserRepositoryImpl implements UserRepository {
+public class RedisRepositoryImpl implements RedisRepository {
 
-	private static final Logger LOGGER = Logger.getLogger(UserRepositoryImpl.class);
+	private static final Logger LOGGER = Logger.getLogger(RedisRepositoryImpl.class);
 
 	private RedisTemplate<String, Object> redisTemplate;
 	private HashOperations<String, String, Object> hashOperations;
 
 	@Autowired
-	public UserRepositoryImpl(RedisTemplate<String, Object> redisTemplate) {
+	public RedisRepositoryImpl(RedisTemplate<String, Object> redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
 
@@ -31,7 +31,7 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public void save(String key, String id, Object user) {
 		hashOperations.put(key, id, user);
-		LOGGER.info("ADDED/UPDATE INTO THE REDIS");
+		LOGGER.info("ADDED/UPDATE THE DATA INTO THE REDIS");
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public void delete(String key, String id) {
 		hashOperations.delete(key, id);
-		LOGGER.info("DELETED THE USER SUCCESSFULLY FROM THE REDIS");
+		LOGGER.info("DELETED THE DATA SUCCESSFULLY FROM THE REDIS");
 	}
 
 }

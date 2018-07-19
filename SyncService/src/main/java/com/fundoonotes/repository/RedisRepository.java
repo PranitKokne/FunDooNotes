@@ -2,7 +2,7 @@ package com.fundoonotes.repository;
 
 import java.util.Map;
 
-public interface UserRepository {
+public interface RedisRepository {
 
 	public void save(String key, String id, Object user);
 

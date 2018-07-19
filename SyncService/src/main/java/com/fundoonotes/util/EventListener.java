@@ -17,23 +17,23 @@ public class EventListener {
 
 	@Autowired
 	private SyncService syncService;
-	
+
 	private static final Logger LOGGER = Logger.getLogger(EventListener.class);
 
-	@RabbitListener(queues = RabbitMQConfig.USER_QUEUE, containerFactory = "containerFactory")
-	public void listenToUser(Message<Map<String, Object>> message,Channel channel) {
-		LOGGER.info("RECEIEVED THE USER FROM THE QUEUE");
-		LOGGER.info("User : " + message.getPayload());
-		LOGGER.info("User : " + message.getHeaders());
-		syncService.sendUserToSyncService(message.getPayload());
+	@RabbitListener(queues = RabbitMQConfig.REDIS_QUEUE_NAME)
+	public void listenToUser(Message<Map<String, Object>> message, Channel channel) {
+		LOGGER.info("RECEIEVED THE REDIS DATA FROM THE QUEUE");
+		LOGGER.info("REDIS : " + message.getPayload());
+		LOGGER.info("REDIS : " + message.getHeaders());
+		syncService.sendRedisDataToSyncService(message.getPayload());
 	}
 
-	@RabbitListener(queues = RabbitMQConfig.NOTE_QUEUE, containerFactory = "containerFactory")
+	@RabbitListener(queues = RabbitMQConfig.ELASTIC_QUEUE_NAME)
 	public void listenToNote(Message<Map<String, Object>> message) {
-		LOGGER.info("RECEIEVED THE NOTE FROM THE QUEUE");
-		LOGGER.info("Note : " + message.getPayload());
-		LOGGER.info("Note : " + message.getHeaders());
-		syncService.sendNoteToSyncService(message.getPayload());
+		LOGGER.info("RECEIEVED THE ELASTIC SEARCH DATA FROM THE QUEUE");
+		LOGGER.info("ES : " + message.getPayload());
+		LOGGER.info("ES : " + message.getHeaders());
+		syncService.sendElasticDataToSyncService(message.getPayload());
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.fundoonotes.read.controller;
 
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fundoonotes.read.repository.NoteRepository;
 import com.fundoonotes.read.repository.UserRepository;
 import com.fundoonotes.read.util.ResourceNotFoundException;
@@ -40,8 +43,8 @@ public class ReadController {
 	}
 
 	@RequestMapping(value = "/fundoonotes/{key}/{hashKey}", method = RequestMethod.GET)
-	public ResponseEntity<Object> getUserById(@PathVariable("key") String key,
-			@PathVariable("hashKey") String hashKey) {
+	public ResponseEntity<Object> getUserById(@PathVariable("key") String key, @PathVariable("hashKey") String hashKey)
+			throws JsonProcessingException {
 		Object user = userRepository.getUserById(key, hashKey);
 		if (user == null) {
 			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));

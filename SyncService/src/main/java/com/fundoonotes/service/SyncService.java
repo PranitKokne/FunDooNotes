@@ -1,11 +1,9 @@
 package com.fundoonotes.service;
 
 import java.util.Map;
-
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fundoonotes.repository.NoteRepository;
 import com.fundoonotes.repository.UserRepository;
 

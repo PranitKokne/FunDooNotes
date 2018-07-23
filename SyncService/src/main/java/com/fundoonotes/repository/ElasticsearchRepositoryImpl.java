@@ -1,18 +1,17 @@
 package com.fundoonotes.repository;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.jboss.logging.Logger;
 import org.springframework.stereotype.Repository;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,48 +29,64 @@ public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 	}
 
 	@Override
-	public void insertNote(String index, String type, String id, Object note) {
-		Map<String, Object> dataMap = objectMapper.convertValue(note, Map.class);
+	public void insertDocument(String index, String type, String id, Object document) {
+		Map<?, ?> dataMap = objectMapper.convertValue(document, Map.class);
 		IndexRequest indexRequest = new IndexRequest(index, type, id).source(dataMap);
 		try {
 			restHighlevelClient.index(indexRequest);
+			LOGGER.info("DOCUMENT ADDEDED SUCCESSFULLY TO THE INDEX");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		LOGGER.info("DOCUMENT ADDEDED SUCCESSFULLY TO THE INDEX");
 	}
 
 	@Override
-	public Map<String, Object> updateNote(String index, String type, String id, Object note) {
-		UpdateRequest updateRequest = new UpdateRequest(index, type, id).fetchSource(true);
-		String noteJson;
-		Map<String, Object> error = new HashMap<>();
-		error.put("Error", "Unable to update document");
-
-		try {
-			noteJson = objectMapper.writeValueAsString(note);
-			updateRequest.doc(noteJson, XContentType.JSON);
-			UpdateResponse updateResponse = restHighlevelClient.update(updateRequest);
-			Map<String, Object> sourceAsMap = updateResponse.getGetResult().sourceAsMap();
-			LOGGER.info("DOCUMENT UPDATED SUCCESSFULLY TO THE INDEX");
-			return sourceAsMap;
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+	public void updateDocument(String index, String type, String id, Object document) {
+		Map<String, Object> record = getDocumentById(index, type, id);
+		if (record != null) {
+			UpdateRequest updateRequest = new UpdateRequest(index, type, id).fetchSource(true);
+			try {
+				String noteJson = objectMapper.writeValueAsString(document);
+				updateRequest.doc(noteJson, XContentType.JSON);
+				restHighlevelClient.update(updateRequest);
+				LOGGER.info("DOCUMENT UPDATED SUCCESSFULLY TO THE INDEX");
+				return;
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return error;
+		LOGGER.info("ERROR IN UPDATING THE UNAVAILABLE DOCUMENT");
 	}
 
 	@Override
-	public void deleteNote(String index, String type, String id) {
-		DeleteRequest deleteRequest = new DeleteRequest(index, type, id);
+	public void deleteDocument(String index, String type, String id) {
+		Map<String, Object> record = getDocumentById(index, type, id);
+		if (record != null) {
+			DeleteRequest deleteRequest = new DeleteRequest(index, type, id);
+			try {
+				restHighlevelClient.delete(deleteRequest);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			LOGGER.info("DOCUMENT DELETED SUCCESSFULLY FROM THE INDEX");
+			return;
+		}
+		LOGGER.info("ERROR IN DELETING THE UNAVAILABLE DOCUMENT");
+	}
+
+	@Override
+	public Map<String, Object> getDocumentById(String index, String type, String id) {
+		Map<String, Object> document = null;
 		try {
-			restHighlevelClient.delete(deleteRequest);
+			GetRequest getRequest = new GetRequest(index, type, id);
+			GetResponse getResponse = restHighlevelClient.get(getRequest);
+			document = getResponse.getSourceAsMap();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		LOGGER.info("DOCUMENT DELETED SUCCESSFULLY FROM THE INDEX");
+		return document;
 	}
 
 }

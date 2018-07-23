@@ -4,10 +4,12 @@ import java.util.Map;
 
 public interface ElasticsearchRepository {
 
-	public void insertNote(String index, String type, String id, Object note) ;
+	public void insertDocument(String index, String type, String id, Object document);
 
-	public Map<String, Object> updateNote(String index, String type, String id, Object note);
+	public void updateDocument(String index, String type, String id, Object document);
 
-	public void deleteNote(String index, String type, String id) ;
+	public void deleteDocument(String index, String type, String id);
+
+	public Map<String, Object> getDocumentById(String index, String type, String id);
 
 }

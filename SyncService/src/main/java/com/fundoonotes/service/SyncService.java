@@ -28,7 +28,7 @@ public class SyncService {
 		if (operation.equalsIgnoreCase("insert")) {
 			redisRepository.save(key, hkey, hvalue);
 		} else if (operation.equalsIgnoreCase("update")) {
-			redisRepository.save(key, hkey, hvalue);
+			redisRepository.update(key, hkey, hvalue);
 		} else if (operation.equalsIgnoreCase("delete")) {
 			redisRepository.delete(key, hkey);
 		}
@@ -43,11 +43,11 @@ public class SyncService {
 		Object document = message.get("document");
 		String operation = (String) message.get("operation");
 		if (operation.equalsIgnoreCase("index")) {
-			elasticSearchRepository.insertNote(index, type, id, document);
+			elasticSearchRepository.insertDocument(index, type, id, document);
 		} else if (operation.equalsIgnoreCase("update")) {
-			elasticSearchRepository.updateNote(index, type, id, document);
+			elasticSearchRepository.updateDocument(index, type, id, document);
 		} else if (operation.equalsIgnoreCase("delete")) {
-			elasticSearchRepository.deleteNote(index, type, id);
+			elasticSearchRepository.deleteDocument(index, type, id);
 		}
 	}
 

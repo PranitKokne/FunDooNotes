@@ -29,9 +29,9 @@ public class RedisRepositoryImpl implements RedisRepository {
 	}
 
 	@Override
-	public void save(String key, String id, Object user) {
-		hashOperations.put(key, id, user);
-		LOGGER.info("ADDED/UPDATE THE DATA INTO THE REDIS");
+	public void save(String key, String id, Object object) {
+		hashOperations.put(key, id, object);
+		LOGGER.info("ADDED/UPDATED THE DATA INTO THE REDIS");
 	}
 
 	@Override
@@ -48,6 +48,15 @@ public class RedisRepositoryImpl implements RedisRepository {
 	public void delete(String key, String id) {
 		hashOperations.delete(key, id);
 		LOGGER.info("DELETED THE DATA SUCCESSFULLY FROM THE REDIS");
+	}
+
+	@Override
+	public void update(String key, String id, Object object) {
+		Object retrievedObject = find(key, id);
+		if (retrievedObject != null) {
+			hashOperations.put(key, id, object);
+			LOGGER.info("UPDATED THE DATA INTO THE REDIS");
+		}
 	}
 
 }

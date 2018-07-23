@@ -21,6 +21,7 @@ public class GlobalExceptionHandlerController extends ResponseEntityExceptionHan
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorDetails> handleAnyException(Exception ex, WebRequest webRequest) {
 		LOGGER.error("PREDEFIND EXCEPTION OCCURED SENDING 500");
+		LOGGER.error(ex.getMessage());
 		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 	}

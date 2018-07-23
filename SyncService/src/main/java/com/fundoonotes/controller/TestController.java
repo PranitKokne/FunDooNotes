@@ -26,8 +26,8 @@ public class TestController {
 	}
 
 	@RequestMapping(value = "fundoonotes/find/{key}/{id}", method = RequestMethod.GET)
-	public String find(@PathVariable String key, @PathVariable String id) {
+	public Object find(@PathVariable String key, @PathVariable String id) {
 		Object oneSpecificUser = redisRepository.find(key, id);
-		return oneSpecificUser.toString();
+		return oneSpecificUser;
 	}
 }

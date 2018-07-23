@@ -31,7 +31,7 @@ public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 
 	@Override
 	public void insertNote(String index, String type, String id, Object note) {
-		Map<?, ?> dataMap = objectMapper.convertValue(note, Map.class);
+		Map<String, Object> dataMap = objectMapper.convertValue(note, Map.class);
 		IndexRequest indexRequest = new IndexRequest(index, type, id).source(dataMap);
 		try {
 			restHighlevelClient.index(indexRequest);

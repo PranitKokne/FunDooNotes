@@ -2,7 +2,8 @@ package com.fundoonotes.read.controller;
 
 import java.util.List;
 import java.util.Map;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -22,8 +23,8 @@ import com.fundoonotes.read.util.ResourceNotFoundException;
 @PropertySource({ "classpath:exception.properties" })
 public class ReadController {
 
-	private static final Logger LOGGER = Logger.getLogger(ReadController.class);
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReadController.class);
+	
 	@Autowired
 	private Environment env;
 
@@ -63,6 +64,18 @@ public class ReadController {
 		String type = pathValues.get("type");
 		String field = pathValues.get("field");
 		List<Map<String, Object>> output = noteRepository.getNotesByState(index, type, field, user_id);
+		if (output.size() == 0) {
+			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
+		}
+		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{index}/{type}/search", method = RequestMethod.GET)
+	public ResponseEntity<List<Map<String, Object>>> getNotesByLabelName(@PathVariable Map<String, String> pathValues,
+			@RequestParam("userId") String userId, @RequestParam("labelValue") String labelValue) {
+		String index = pathValues.get("index");
+		String type = pathValues.get("type");
+		List<Map<String, Object>> output = noteRepository.getNotesByLabelName(index, type, userId, labelValue);
 		if (output.size() == 0) {
 			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
 		}

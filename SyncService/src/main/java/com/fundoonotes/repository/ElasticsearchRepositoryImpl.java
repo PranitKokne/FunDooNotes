@@ -2,7 +2,6 @@ package com.fundoonotes.repository;
 
 import java.io.IOException;
 import java.util.Map;
-
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
@@ -10,7 +9,8 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Repository
 public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 
-	private static final Logger LOGGER = Logger.getLogger(ElasticsearchRepositoryImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchRepositoryImpl.class);
 
 	private RestHighLevelClient restHighlevelClient;
 	private ObjectMapper objectMapper;
@@ -36,7 +36,7 @@ public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 			restHighlevelClient.index(indexRequest);
 			LOGGER.info("DOCUMENT ADDEDED SUCCESSFULLY TO THE INDEX");
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("IOException WHILE INDEXING THE DOCUMENT", e);
 		}
 	}
 
@@ -52,12 +52,12 @@ public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 				LOGGER.info("DOCUMENT UPDATED SUCCESSFULLY TO THE INDEX");
 				return;
 			} catch (JsonProcessingException e) {
-				e.printStackTrace();
+				LOGGER.error("JSON PROCESSING EXCEPTION WHILE UPDATING DOCUMENT", e);
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("IOEXCEPTION WHILE UPDATING THE DOCUMENT", e);
 			}
 		}
-		LOGGER.info("ERROR IN UPDATING THE UNAVAILABLE DOCUMENT");
+		LOGGER.error("ERROR IN UPDATING THE UNAVAILABLE DOCUMENT");
 	}
 
 	@Override
@@ -68,12 +68,12 @@ public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 			try {
 				restHighlevelClient.delete(deleteRequest);
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("IOEXCEPTION WHILE DELETING THE DOCUMENT", e);
 			}
 			LOGGER.info("DOCUMENT DELETED SUCCESSFULLY FROM THE INDEX");
 			return;
 		}
-		LOGGER.info("ERROR IN DELETING THE UNAVAILABLE DOCUMENT");
+		LOGGER.error("ERROR IN DELETING THE UNAVAILABLE DOCUMENT");
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 			GetResponse getResponse = restHighlevelClient.get(getRequest);
 			document = getResponse.getSourceAsMap();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("IOEXCEPTION WHILE READING THE DOCUMENT", e);
 		}
 		return document;
 	}

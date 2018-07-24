@@ -3,7 +3,8 @@ package com.fundoonotes.read.config;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ElasticSearchConfiguration extends AbstractFactoryBean<RestHighLevelClient> {
 
-	private static final Logger LOGGER = Logger.getLogger(ElasticSearchConfiguration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchConfiguration.class);
 
 	@Value("${spring.data.elasticsearch.cluster-name}")
 	private String clusterName;

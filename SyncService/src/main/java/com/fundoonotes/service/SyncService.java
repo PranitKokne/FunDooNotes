@@ -1,7 +1,8 @@
 package com.fundoonotes.service;
 
 import java.util.Map;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fundoonotes.repository.ElasticsearchRepository;
@@ -16,7 +17,7 @@ public class SyncService {
 	@Autowired
 	ElasticsearchRepository elasticSearchRepository;
 
-	private static final Logger LOGGER = Logger.getLogger(SyncService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SyncService.class);
 
 	public void sendRedisDataToSyncService(Map<String, Object> message) {
 		LOGGER.info("****PROCESSING THE REDIS DATA****");

@@ -16,13 +16,9 @@ public class TestController {
 	private RedisRepository redisRepository;
 
 	@RequestMapping(value = "fundoonotes/findall/{key}", method = RequestMethod.GET)
-	public String findAll(@PathVariable String key) {
-		String result = "";
+	public Map<String, Object> findAll(@PathVariable String key) {
 		Map<String, Object> user = redisRepository.findAll(key);
-		for (Object o : user.values()) {
-			result += o.toString();
-		}
-		return result;
+		return user;
 	}
 
 	@RequestMapping(value = "fundoonotes/find/{key}/{id}", method = RequestMethod.GET)

@@ -24,22 +24,22 @@ public class SpringFoxConfiguration {
 	private Environment env;
 
 	@Value("${title}")
-	private String TITLE;
+	private String title;
 
 	@Value("${description}")
-	private String DESCRIPTION;
+	private String description;
 
 	@Value("${version}")
-	private String VERSION;
+	private String version;
 
 	@Value("${terms.of.service}")
-	private String TERMSOFSERVICE;
+	private String termsOfService;
 
 	@Value("${license}")
-	private String LICENCE;
+	private String licence;
 
 	@Value("${license.url}")
-	private String LICENCEURL;
+	private String licenceUrl;
 
 	@Bean
 	public Docket apiDocket() {
@@ -50,8 +50,8 @@ public class SpringFoxConfiguration {
 
 	private ApiInfo getApiInfo() {
 		return new ApiInfo(
-				TITLE, DESCRIPTION, VERSION, TERMSOFSERVICE, new Contact(env.getProperty("contact.name"),
+				title, description, version, termsOfService, new Contact(env.getProperty("contact.name"),
 						env.getProperty("contact.url"), env.getProperty("contact.email")),
-				LICENCE, LICENCEURL, Collections.emptyList());
+				licence, licenceUrl, Collections.emptyList());
 	}
 }

@@ -1,12 +1,15 @@
 package com.fundoonotes.service;
 
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.fundoonotes.repository.ElasticsearchRepository;
 import com.fundoonotes.repository.RedisRepository;
+import com.fundoonotes.util.ElasticSearchMapping;
 
 @Service
 public class SyncService {
@@ -16,6 +19,9 @@ public class SyncService {
 
 	@Autowired
 	ElasticsearchRepository elasticSearchRepository;
+
+	@Autowired
+	ElasticSearchMapping elasticSearchMapping;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SyncService.class);
 
@@ -43,6 +49,9 @@ public class SyncService {
 		String id = (String) message.get("id");
 		Object document = message.get("document");
 		String operation = (String) message.get("operation");
+		if (!elasticSearchMapping.isIndexPresent(index)) {
+			ElasticSearchMapping.createIndexMapping(index);
+		}
 		if (operation.equalsIgnoreCase("index")) {
 			elasticSearchRepository.insertDocument(index, type, id, document);
 		} else if (operation.equalsIgnoreCase("update")) {

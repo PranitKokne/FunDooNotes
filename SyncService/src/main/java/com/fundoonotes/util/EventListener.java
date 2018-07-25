@@ -26,12 +26,12 @@ public class EventListener {
 		syncService.sendRedisDataToSyncService(message.getPayload());
 	}
 
-	/*@RabbitListener(queues = RabbitMQConfig.ELASTIC_QUEUE_NAME)
+	@RabbitListener(queues = RabbitMQConfig.ELASTIC_QUEUE_NAME)
 	public void listenToNote(Message<Map<String, Object>> message) {
 		LOGGER.info("RECEIEVED THE ELASTIC SEARCH DATA FROM THE QUEUE");
 		LOGGER.info("ES : " + message.getPayload());
 		LOGGER.info("ES : " + message.getHeaders());
 		syncService.sendElasticDataToSyncService(message.getPayload());
-	}*/
+	}
 
 }

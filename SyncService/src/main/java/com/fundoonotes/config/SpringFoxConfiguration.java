@@ -36,10 +36,10 @@ public class SpringFoxConfiguration {
 	private String termOfService;
 
 	@Value("${license}")
-	private String licence;
+	private String license;
 
 	@Value("${license.url}")
-	private String licenceUrl;
+	private String licenseUrl;
 
 	@Bean
 	public Docket apiDocket() {
@@ -52,6 +52,6 @@ public class SpringFoxConfiguration {
 		return new ApiInfo(
 				title, description, version, termOfService, new Contact(env.getProperty("contact.name"),
 						env.getProperty("contact.url"), env.getProperty("contact.email")),
-				licence, licenceUrl, Collections.emptyList());
+				license, licenseUrl, Collections.emptyList());
 	}
 }

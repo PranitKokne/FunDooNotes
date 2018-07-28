@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ElasticSearchMapping {
+public class ElasticSearchMapping<T> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchMapping.class);
 

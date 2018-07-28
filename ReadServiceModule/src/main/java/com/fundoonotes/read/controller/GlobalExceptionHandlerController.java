@@ -24,13 +24,13 @@ public class GlobalExceptionHandlerController extends ResponseEntityExceptionHan
 	@Autowired
 	private Environment env;
 
-	@ExceptionHandler(Exception.class)
+	/*@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorDetails> handleAnyException(Exception ex, WebRequest webRequest) {
 		LOGGER.error(env.getProperty("internal.server.error"));
 		LOGGER.error(ex.getMessage());
 		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+	}*/
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException ex,

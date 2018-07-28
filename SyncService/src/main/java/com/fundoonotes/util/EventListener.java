@@ -11,15 +11,15 @@ import com.fundoonotes.config.RabbitMQConfig;
 import com.fundoonotes.service.SyncService;
 
 @Component
-public class EventListener {
+public class EventListener<T> {
 
 	@Autowired
-	private SyncService syncService;
+	private SyncService<T> syncService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventListener.class);
 
 	@RabbitListener(queues = RabbitMQConfig.REDIS_QUEUE_NAME)
-	public void listenToUser(Message<Map<String, Object>> message) {
+	public void listenToUser(Message<Map<T,T>> message) {
 		LOGGER.info("RECEIEVED THE REDIS DATA FROM THE QUEUE");
 		LOGGER.info("REDIS : " + message.getPayload());
 		LOGGER.info("REDIS : " + message.getHeaders());
@@ -27,7 +27,7 @@ public class EventListener {
 	}
 
 	@RabbitListener(queues = RabbitMQConfig.ELASTIC_QUEUE_NAME)
-	public void listenToNote(Message<Map<String, Object>> message) {
+	public void listenToNote(Message<Map<T, T>> message) {
 		LOGGER.info("RECEIEVED THE ELASTIC SEARCH DATA FROM THE QUEUE");
 		LOGGER.info("ES : " + message.getPayload());
 		LOGGER.info("ES : " + message.getHeaders());

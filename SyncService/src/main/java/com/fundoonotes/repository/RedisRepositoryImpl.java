@@ -1,7 +1,6 @@
 package com.fundoonotes.repository;
 
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,15 +10,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RedisRepositoryImpl implements RedisRepository {
+public class RedisRepositoryImpl<T> implements RedisRepository<T> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RedisRepositoryImpl.class);
 
-	private RedisTemplate<String, Object> redisTemplate;
-	private HashOperations<String, String, Object> hashOperations;
+	private RedisTemplate<T, T> redisTemplate;
+	private HashOperations<T, T, T> hashOperations;
 
 	@Autowired
-	public RedisRepositoryImpl(RedisTemplate<String, Object> redisTemplate) {
+	public RedisRepositoryImpl(RedisTemplate<T, T> redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
 
@@ -29,14 +28,14 @@ public class RedisRepositoryImpl implements RedisRepository {
 	}
 
 	@Override
-	public void save(String key, String id, Object object) {
+	public void save(T key, T id, T object) {
 		hashOperations.put(key, id, object);
 		LOGGER.info("ADDED/UPDATED THE DATA INTO THE REDIS");
 	}
 
 	@Override
-	public void update(String key, String id, Object object) {
-		Object retrievedObject = find(key, id);
+	public void update(T key, T id, T object) {
+		T retrievedObject = find(key, id);
 		if (retrievedObject != null) {
 			hashOperations.put(key, id, object);
 			LOGGER.info("UPDATED THE DATA INTO THE REDIS");
@@ -46,24 +45,24 @@ public class RedisRepositoryImpl implements RedisRepository {
 	}
 
 	@Override
-	public void delete(String key, String id) {
-		Object retrievedObject = find(key, id);
+	public Map<T, T> findAll(T key) {
+		return hashOperations.entries(key);
+	}
+
+	@Override
+	public T find(T key, T id) {
+		return hashOperations.get(key, id);
+	}
+
+	@Override
+	public void delete(T key, T id) {
+		T retrievedObject = find(key, id);
 		if (retrievedObject != null) {
 			hashOperations.delete(key, id);
 			LOGGER.info("DELETED THE DATA SUCCESSFULLY FROM THE REDIS");
 			return;
 		}
 		LOGGER.info("ERROR IN DELETING THE DATA FROM THE REDIS");
-	}
-
-	@Override
-	public Map<String, Object> findAll(String key) {
-		return hashOperations.entries(key);
-	}
-
-	@Override
-	public Object find(String key, String id) {
-		return hashOperations.get(key, id);
 	}
 
 }

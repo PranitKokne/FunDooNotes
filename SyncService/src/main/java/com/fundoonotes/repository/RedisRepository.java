@@ -2,15 +2,15 @@ package com.fundoonotes.repository;
 
 import java.util.Map;
 
-public interface RedisRepository {
+public interface RedisRepository<T> {
 
-	public void save(String key, String id, Object object);
+	public void save(T key, T hkey, T hvalue);
 
-	public void update(String key,String id,Object object);
-	
-	public Map<String, Object> findAll(String key);
+	public void update(T key, T id, T object);
 
-	public Object find(String key, String id);
+	public Map<T, T> findAll(T key);
 
-	public void delete(String key, String id);
+	public T find(T key, T id);
+
+	public void delete(T key, T id);
 }

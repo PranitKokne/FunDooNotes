@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fundoonotes.repository.RedisRepository;
 
 @RestController
-public class TestController {
+public class TestController<T> {
 
 	@Autowired
-	private RedisRepository redisRepository;
+	private RedisRepository<T> redisRepository;
 
 	@RequestMapping(value = "fundoonotes/findall/{key}", method = RequestMethod.GET)
-	public Map<String, Object> findAll(@PathVariable String key) {
-		Map<String, Object> user = redisRepository.findAll(key);
+	public Map<T, T> findAll(@PathVariable T key) {
+		Map<T, T> user = redisRepository.findAll(key);
 		return user;
 	}
 
 	@RequestMapping(value = "fundoonotes/find/{key}/{id}", method = RequestMethod.GET)
-	public Object find(@PathVariable String key, @PathVariable String id) {
-		Object oneSpecificUser = redisRepository.find(key, id);
+	public T find(@PathVariable T key, @PathVariable T id) {
+		T oneSpecificUser = redisRepository.find(key, id);
 		return oneSpecificUser;
 	}
 }

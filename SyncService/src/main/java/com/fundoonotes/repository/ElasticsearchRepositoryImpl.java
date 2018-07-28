@@ -16,7 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
-public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
+public class ElasticsearchRepositoryImpl<T> implements ElasticsearchRepository<T> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchRepositoryImpl.class);
 
@@ -29,7 +29,7 @@ public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 	}
 
 	@Override
-	public void insertDocument(String index, String type, String id, Object document) {
+	public void insertDocument(String index, String type, String id, T document) {
 		Map<?, ?> dataMap = objectMapper.convertValue(document, Map.class);
 		IndexRequest indexRequest = new IndexRequest(index, type, id).source(dataMap);
 		try {
@@ -41,8 +41,8 @@ public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 	}
 
 	@Override
-	public void updateDocument(String index, String type, String id, Object document) {
-		Map<String, Object> record = getDocumentById(index, type, id);
+	public void updateDocument(String index, String type, String id, T document) {
+		Map<T, T> record = getDocumentById(index, type, id);
 		if (record != null) {
 			UpdateRequest updateRequest = new UpdateRequest(index, type, id).fetchSource(true);
 			try {
@@ -62,7 +62,7 @@ public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 
 	@Override
 	public void deleteDocument(String index, String type, String id) {
-		Map<String, Object> record = getDocumentById(index, type, id);
+		Map<T, T> record = getDocumentById(index, type, id);
 		if (record != null) {
 			DeleteRequest deleteRequest = new DeleteRequest(index, type, id);
 			try {
@@ -77,12 +77,12 @@ public class ElasticsearchRepositoryImpl implements ElasticsearchRepository {
 	}
 
 	@Override
-	public Map<String, Object> getDocumentById(String index, String type, String id) {
-		Map<String, Object> document = null;
+	public Map<T, T> getDocumentById(String index, String type, String id) {
+		Map<T, T> document = null;
 		try {
 			GetRequest getRequest = new GetRequest(index, type, id);
 			GetResponse getResponse = restHighlevelClient.get(getRequest);
-			document = getResponse.getSourceAsMap();
+			document = (Map<T, T>) getResponse.getSourceAsMap();
 		} catch (IOException e) {
 			LOGGER.error("IOEXCEPTION WHILE READING THE DOCUMENT", e);
 		}

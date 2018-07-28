@@ -2,8 +2,11 @@ package com.fundoonotes.read.repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -29,14 +32,14 @@ public class NoteRepositoryImpl implements NoteRepository {
 		this.restHighLevelClient = restHighLevelClient;
 	}
 
-	public List<Map<String, Object>> getNotesByUserId(String index, String type, String fieldName, String value) {
+	public List<Map<String, Object>> getNotesByUserId(String index, String type, String userId) {
 		LOGGER.info("GET NOTES BY USER ID REPO");
 		List<Map<String, Object>> userNotes = new ArrayList<Map<String, Object>>();
 		try {
 			SearchRequest searchRequest = new SearchRequest(index);
 			searchRequest.types(type);
 			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-			searchSourceBuilder.query(QueryBuilders.termQuery(fieldName, value));
+			searchSourceBuilder.query(QueryBuilders.termQuery("userId", userId));
 			searchRequest.source(searchSourceBuilder);
 			SearchResponse searchResponse = restHighLevelClient.search(searchRequest);
 			SearchHit[] hits = searchResponse.getHits().getHits();
@@ -56,7 +59,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 			SearchRequest searchRequest = new SearchRequest(index);
 			searchRequest.types(type);
 			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-			searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("user_id", userId))
+			searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("userId", userId))
 					.must(QueryBuilders.termQuery(field, true)));
 			searchRequest.source(searchSourceBuilder);
 			SearchResponse searchResponse = restHighLevelClient.search(searchRequest);
@@ -100,4 +103,50 @@ public class NoteRepositoryImpl implements NoteRepository {
 		return QueryBuilders.nestedQuery("labels", boolQueryBuilder, ScoreMode.Avg);
 	}
 
+	@Override
+	public List<Map<String, Object>> getNotesBySearching(String index, String type, String userId, String queryString) {
+		LOGGER.info("GET THE USER NOTES BASED ON SEARCH");
+		List<Map<String, Object>> userNotes = new ArrayList<>();
+		try {
+			SearchRequest searchRequest = new SearchRequest(index);
+			searchRequest.types(type);
+			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+			searchSourceBuilder.query(QueryBuilders.queryStringQuery(queryString));
+			searchRequest.source(searchSourceBuilder);
+			SearchResponse searchResponse = restHighLevelClient.search(searchRequest);
+			SearchHit[] hits = searchResponse.getHits().getHits();
+			for (SearchHit note : hits) {
+				userNotes.add(note.getSourceAsMap());
+			}
+		} catch (IOException e) {
+			LOGGER.error("IOEXCEPTION WHILE READING THE NOTES BASED ON SEARCH ", e);
+		}
+		return userNotes;
+	}
+
+	@Override
+	public Set<String> getAllLabelNames(String index, String type, String userId) {
+		LOGGER.info("GET THE LABEL NAMES ");
+		Set<String> labelNames = new LinkedHashSet<>();
+		try {
+			SearchRequest searchRequest = new SearchRequest(index);
+			searchRequest.types(type);
+			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+			searchSourceBuilder.query(QueryBuilders.termQuery("userId", userId));
+			searchRequest.source(searchSourceBuilder);
+			SearchResponse searchResponse = restHighLevelClient.search(searchRequest);
+			SearchHit[] hits = searchResponse.getHits().getHits();
+			for (SearchHit note : hits) {
+				Map<String, Object> sourceAsMap = note.getSourceAsMap();
+				List<Map<String, Object>> label = (List<Map<String, Object>>) sourceAsMap.get("labels");
+				for (Map<String, Object> name : label) {
+					LOGGER.info((String) (name.get("name")));
+					labelNames.add((String) name.get("name"));
+				}
+			}
+		} catch (IOException e) {
+			LOGGER.error("IOEXCEPTION WHILE READING THE LABEL NAMES ", e);
+		}
+		return labelNames;
+	}
 }

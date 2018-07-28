@@ -28,7 +28,7 @@ public class ElasticSearchConfiguration extends AbstractFactoryBean<RestHighLeve
 			try {
 				restHighLevelClient.close();
 			} catch (final Exception e) {
-				LOGGER.error("Error closing elastic search client : " + e);
+				LOGGER.error("Error closing elastic search client : ", e);
 			}
 		}
 	}
@@ -53,7 +53,7 @@ public class ElasticSearchConfiguration extends AbstractFactoryBean<RestHighLeve
 			restHighLevelClient = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http"),
 					new HttpHost("localhost", 9201, "http")));
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			LOGGER.error("ERROR WHILE BUILDING THE REST CLIENT ", e);
 		}
 		return restHighLevelClient;
 	}

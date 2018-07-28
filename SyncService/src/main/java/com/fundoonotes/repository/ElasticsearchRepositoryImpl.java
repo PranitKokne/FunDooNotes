@@ -76,6 +76,7 @@ public class ElasticsearchRepositoryImpl<T> implements ElasticsearchRepository<T
 		LOGGER.error("ERROR IN DELETING THE UNAVAILABLE DOCUMENT");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<T, T> getDocumentById(String index, String type, String id) {
 		Map<T, T> document = null;

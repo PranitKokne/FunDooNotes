@@ -6,7 +6,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -33,7 +32,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 	}
 
 	public List<Map<String, Object>> getNotesByUserId(String index, String type, String userId) {
-		LOGGER.info("GET NOTES BY USER ID REPO");
+		LOGGER.info("GET NOTES BY USER ID");
 		List<Map<String, Object>> userNotes = new ArrayList<Map<String, Object>>();
 		try {
 			SearchRequest searchRequest = new SearchRequest(index);
@@ -47,13 +46,13 @@ public class NoteRepositoryImpl implements NoteRepository {
 				userNotes.add(note.getSourceAsMap());
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("IOEXCEPTION WHILE READING THE NOTES BASED ON USER ID NAME", e);
 		}
 		return userNotes;
 	}
 
 	public List<Map<String, Object>> getNotesByState(String index, String type, String field, String userId) {
-		LOGGER.info("GET TRASH/ARCHIVE NOTES BY USER ID REPO");
+		LOGGER.info("GET TRASH/ARCHIVE NOTES BY USER ID");
 		List<Map<String, Object>> userNotes = new ArrayList<Map<String, Object>>();
 		try {
 			SearchRequest searchRequest = new SearchRequest(index);
@@ -68,7 +67,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 				userNotes.add(note.getSourceAsMap());
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("IOEXCEPTION WHILE READING THE NOTES BASED ON STATE", e);
 		}
 		return userNotes;
 	}

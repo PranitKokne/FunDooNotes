@@ -2,7 +2,6 @@ package com.fundoonotes.user.model;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-
 import org.hibernate.validator.constraints.Length;
 
 public class LoginDTO {

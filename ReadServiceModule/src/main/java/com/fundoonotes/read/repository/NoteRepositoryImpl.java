@@ -73,16 +73,15 @@ public class NoteRepositoryImpl implements NoteRepository {
 	}
 
 	@Override
-	public List<Map<String, Object>> getNotesByLabelName(String index, String type, String userId, String labelValue) {
+	public List<Map<String, Object>> getNotesByLabelName(String index, String type, String userId, String labelName) {
 		LOGGER.info("GET THE USER NOTES BY LABEL NAME");
 		List<Map<String, Object>> userNotes = new ArrayList<>();
 		try {
 			SearchRequest searchRequest = new SearchRequest(index);
 			searchRequest.types(type);
 			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-			BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-			searchSourceBuilder.query(nestedBoolQuery(labelValue))
-					.query(boolQueryBuilder.must(QueryBuilders.termQuery("userId", userId)));
+			searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("userId", userId))
+					.must(nestedBoolQuery(labelName)));
 			searchRequest.source(searchSourceBuilder);
 			SearchResponse searchResponse = restHighLevelClient.search(searchRequest);
 			SearchHit[] hits = searchResponse.getHits().getHits();
@@ -95,11 +94,11 @@ public class NoteRepositoryImpl implements NoteRepository {
 		return userNotes;
 	}
 
-	public NestedQueryBuilder nestedBoolQuery(String labelValue) {
+	public NestedQueryBuilder nestedBoolQuery(String labelName) {
 		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-		MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("labels.name", labelValue);
+		MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("label.labelName", labelName);
 		boolQueryBuilder.must(matchQueryBuilder);
-		return QueryBuilders.nestedQuery("labels", boolQueryBuilder, ScoreMode.Avg);
+		return QueryBuilders.nestedQuery("label", boolQueryBuilder, ScoreMode.Avg);
 	}
 
 	@Override
@@ -110,7 +109,8 @@ public class NoteRepositoryImpl implements NoteRepository {
 			SearchRequest searchRequest = new SearchRequest(index);
 			searchRequest.types(type);
 			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-			searchSourceBuilder.query(QueryBuilders.queryStringQuery(queryString));
+			searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("userId", userId))
+					.must(QueryBuilders.queryStringQuery(queryString)));
 			searchRequest.source(searchSourceBuilder);
 			SearchResponse searchResponse = restHighLevelClient.search(searchRequest);
 			SearchHit[] hits = searchResponse.getHits().getHits();
@@ -124,6 +124,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Set<String> getAllLabelNames(String index, String type, String userId) {
 		LOGGER.info("GET THE LABEL NAMES ");
 		Set<String> labelNames = new LinkedHashSet<>();
@@ -137,10 +138,10 @@ public class NoteRepositoryImpl implements NoteRepository {
 			SearchHit[] hits = searchResponse.getHits().getHits();
 			for (SearchHit note : hits) {
 				Map<String, Object> sourceAsMap = note.getSourceAsMap();
-				List<Map<String, Object>> label = (List<Map<String, Object>>) sourceAsMap.get("labels");
-				for (Map<String, Object> name : label) {
-					LOGGER.info((String) (name.get("name")));
-					labelNames.add((String) name.get("name"));
+				Map<String, Object> label = (Map<String, Object>) sourceAsMap.get("label");
+				List<String> names = (List<String>) label.get("labelName");
+				for (String name : names) {
+					labelNames.add(name);
 				}
 			}
 		} catch (IOException e) {

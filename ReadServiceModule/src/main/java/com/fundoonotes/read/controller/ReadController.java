@@ -74,10 +74,10 @@ public class ReadController {
 
 	@RequestMapping(value = "/getnotesoflabel/{index}/{type}/search", method = RequestMethod.GET)
 	public ResponseEntity<List<Map<String, Object>>> getNotesByLabelName(@PathVariable Map<String, String> pathValues,
-			@RequestParam("userId") String userId, @RequestParam("labelValue") String labelValue) {
+			@RequestParam("userId") String userId, @RequestParam("labelName") String labelName) {
 		String index = pathValues.get("index");
 		String type = pathValues.get("type");
-		List<Map<String, Object>> output = noteRepository.getNotesByLabelName(index, type, userId, labelValue);
+		List<Map<String, Object>> output = noteRepository.getNotesByLabelName(index, type, userId, labelName);
 		if (output.size() == 0) {
 			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
 		}

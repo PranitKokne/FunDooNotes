@@ -84,7 +84,7 @@ public class ReadController {
 		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/getnotes/{index}/{type}/search", method = RequestMethod.POST)
+	@RequestMapping(value = "/getnotes/{index}/{type}/search", method = RequestMethod.GET)
 	public ResponseEntity<List<Map<String, Object>>> getNotesBySearching(@PathVariable Map<String, String> pathValues,
 			@RequestParam("userId") String userId, @RequestParam("query_string") String queryString) {
 		String index = pathValues.get("index");
@@ -96,7 +96,7 @@ public class ReadController {
 		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/getlabels/{index}/{type}/search")
+	@RequestMapping(value = "/getlabels/{index}/{type}/search", method = RequestMethod.GET)
 	public ResponseEntity<Set<String>> getAllLabelNames(@PathVariable Map<String, String> pathValues,
 			@RequestParam("userId") String userId) {
 		String index = pathValues.get("index");
@@ -106,6 +106,18 @@ public class ReadController {
 			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
 		}
 		return new ResponseEntity<Set<String>>(output, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/getremindernotes/{index}/{type}/search", method = RequestMethod.GET)
+	public ResponseEntity<List<Map<String, Object>>> getReminderNotesOfUser(
+			@PathVariable Map<String, String> pathValues, @RequestParam("userId") String userId) {
+		String index = pathValues.get("index");
+		String type = pathValues.get("type");
+		List<Map<String, Object>> output = noteRepository.getReminderNotesOfUser(index, type, userId);
+		if (output.size() == 0) {
+			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
+		}
+		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
 	}
 
 }

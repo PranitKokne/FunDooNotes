@@ -2,10 +2,12 @@ package com.fundoonotes.read.repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -81,7 +83,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 			searchRequest.types(type);
 			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 			searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("userId", userId))
-					.must(nestedBoolQuery(labelName)));
+					.must(nestedBoolQueryForLabel(labelName)));
 			searchRequest.source(searchSourceBuilder);
 			SearchResponse searchResponse = restHighLevelClient.search(searchRequest);
 			SearchHit[] hits = searchResponse.getHits().getHits();
@@ -94,7 +96,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 		return userNotes;
 	}
 
-	public NestedQueryBuilder nestedBoolQuery(String labelName) {
+	public NestedQueryBuilder nestedBoolQueryForLabel(String labelName) {
 		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 		MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("label.labelName", labelName);
 		boolQueryBuilder.must(matchQueryBuilder);
@@ -148,5 +150,33 @@ public class NoteRepositoryImpl implements NoteRepository {
 			LOGGER.error("IOEXCEPTION WHILE READING THE LABEL NAMES ", e);
 		}
 		return labelNames;
+	}
+
+	@Override
+	public List<Map<String, Object>> getReminderNotesOfUser(String index, String type, String userId) {
+		LOGGER.info("GET REMINDER NOTES OF USER");
+		List<Map<String, Object>> userNotes = new ArrayList<>();
+		try {
+			SearchRequest searchRequest = new SearchRequest(index);
+			searchRequest.types(type);
+			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+			searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("userId", userId))
+					.must(nestedQueryForReminder("reminder", "reminder.date")));
+			searchRequest.source(searchSourceBuilder);
+			SearchResponse searchResponse = restHighLevelClient.search(searchRequest);
+			SearchHit[] hits = searchResponse.getHits().getHits();
+			for (SearchHit note : hits) {
+				userNotes.add(note.getSourceAsMap());
+			}
+		} catch (IOException e) {
+			LOGGER.error("IOEXCEPTION WHILE READING THE REMINDER NAMES ", e);
+		}
+		return userNotes;
+	}
+
+	public NestedQueryBuilder nestedQueryForReminder(String path, String field) {
+		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+		boolQueryBuilder.must(QueryBuilders.constantScoreQuery(QueryBuilders.existsQuery(field)));
+		return QueryBuilders.nestedQuery(path, boolQueryBuilder, ScoreMode.Avg);
 	}
 }

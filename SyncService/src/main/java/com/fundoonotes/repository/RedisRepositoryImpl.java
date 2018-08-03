@@ -41,7 +41,7 @@ public class RedisRepositoryImpl<T> implements RedisRepository<T> {
 			LOGGER.info("UPDATED THE DATA INTO THE REDIS");
 			return;
 		}
-		LOGGER.info("ERROR IN UPDATING THE DATA INTO THE REDIS");
+		LOGGER.error("ERROR IN UPDATING THE UNAVAILABLE DATA INTO THE REDIS");
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class RedisRepositoryImpl<T> implements RedisRepository<T> {
 			LOGGER.info("DELETED THE DATA SUCCESSFULLY FROM THE REDIS");
 			return;
 		}
-		LOGGER.info("ERROR IN DELETING THE DATA FROM THE REDIS");
+		LOGGER.error("ERROR IN DELETING THE UNAVAILABLE DATA FROM THE REDIS");
 	}
 
 }

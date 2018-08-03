@@ -18,4 +18,6 @@ public interface NoteRepository {
 
 	public List<Map<String, Object>> getReminderNotesOfUser(String index, String type, String userId);
 
+	public Set<String> getAllNewLabelNames(String index, String type, String userId);
+
 }

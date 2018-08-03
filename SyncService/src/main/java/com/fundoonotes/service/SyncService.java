@@ -56,9 +56,6 @@ public class SyncService<T> {
 		T task = message.get("operation");
 		String operation = task.toString();
 		if (operation != null) {
-			if (!elasticSearchMapping.isIndexPresent(index)) {
-				ElasticSearchMapping.createIndexMapping(index);
-			}
 			if (operation.equalsIgnoreCase("index")) {
 				elasticSearchRepository.insertDocument(index, type, id, document);
 			} else if (operation.equalsIgnoreCase("update")) {

@@ -51,6 +51,14 @@ public class ElasticSearchMapping<T> {
 		userId.put("type", "text");
 		Map<String, Object> noteId = new HashMap<>();
 		noteId.put("type", "text");
+		Map<String, Object> reminderDate = new HashMap<>();
+		reminderDate.put("type", "date");
+		Map<String, Object> reminderTime = new HashMap<>();
+		reminderTime.put("type", "date");
+		Map<String, Object> reminderFrequency = new HashMap<>();
+		reminderFrequency.put("type", "keyword");
+		Map<String, Object> labelId = new HashMap<>();
+		labelId.put("type", "object");
 
 		properties.put("userId", userId);
 		properties.put("id", noteId);
@@ -59,6 +67,10 @@ public class ElasticSearchMapping<T> {
 		properties.put("createdDate", createdDate);
 		properties.put("updatedDate", updatedDate);
 		properties.put("color", color);
+		properties.put("reminderDate", reminderDate);
+		properties.put("reminderTime", reminderTime);
+		properties.put("reminderFrequency", reminderFrequency);
+		properties.put("labelId", labelId);
 
 		note.put("properties", properties);
 

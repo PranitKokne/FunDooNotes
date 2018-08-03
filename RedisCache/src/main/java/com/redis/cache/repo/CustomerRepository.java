@@ -7,11 +7,11 @@ import com.redis.cache.model.Customer;
 public interface CustomerRepository {
 	void save(Customer customer);
 
-	Customer find(Long id);
+	Customer find(String id);
 
-	Map<Long, Customer> findAll();
+	Map<String, Customer> findAll();
 
 	void update(Customer customer);
 
-	void delete(Long id);
+	void delete(String id);
 }

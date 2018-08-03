@@ -5,3 +5,4 @@ Servers/*
 Fundoonotes/RemoteSystemsTempFiles/*
 Fundoonotes/Servers/*
 *.project
+*.log

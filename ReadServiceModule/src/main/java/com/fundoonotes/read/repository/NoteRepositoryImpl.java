@@ -2,7 +2,6 @@ package com.fundoonotes.read.repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -178,5 +177,27 @@ public class NoteRepositoryImpl implements NoteRepository {
 		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 		boolQueryBuilder.must(QueryBuilders.constantScoreQuery(QueryBuilders.existsQuery(field)));
 		return QueryBuilders.nestedQuery(path, boolQueryBuilder, ScoreMode.Avg);
+	}
+
+	public Set<String> getAllNewLabelNames(String index, String type, String userId) {
+		LOGGER.info("GET THE LABEL NAMES ");
+		Set<String> labelNames = new LinkedHashSet<>();
+		try {
+			SearchRequest searchRequest = new SearchRequest(index);
+			searchRequest.types(type);
+			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+			searchSourceBuilder.query(QueryBuilders.termQuery("userId", userId));
+			searchRequest.source(searchSourceBuilder);
+			SearchResponse searchResponse = restHighLevelClient.search(searchRequest);
+			SearchHit[] hits = searchResponse.getHits().getHits();
+			for (SearchHit note : hits) {
+				Map<String, Object> sourceAsMap = note.getSourceAsMap();
+				String name = (String) sourceAsMap.get("labelName");
+				labelNames.add(name);
+			}
+		} catch (IOException e) {
+			LOGGER.error("IOEXCEPTION WHILE READING THE LABEL NAMES ", e);
+		}
+		return labelNames;
 	}
 }

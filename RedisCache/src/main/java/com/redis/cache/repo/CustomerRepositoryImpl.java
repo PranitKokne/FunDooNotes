@@ -14,10 +14,10 @@ import com.redis.cache.model.Customer;
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository {
 
-	private static final String KEY = "Customer";
+	private static final String KEY = "Employee";
 	 
 	private RedisTemplate<String, Object> redisTemplate;
-	private HashOperations<String, Long, Customer> hashOperations;
+	private HashOperations<String, String, Customer> hashOperations;
  
 	@Autowired
 	public CustomerRepositoryImpl(RedisTemplate<String, Object> redisTemplate) {
@@ -35,12 +35,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 	}
  
 	@Override
-	public Customer find(Long id) {
+	public Customer find(String id) {
 		return hashOperations.get(KEY, id);
 	}
  
 	@Override
-	public Map<Long, Customer> findAll() {
+	public Map<String, Customer> findAll() {
 		return hashOperations.entries(KEY);
 	}
  
@@ -50,7 +50,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 	}
  
 	@Override
-	public void delete(Long id) {
+	public void delete(String id) {
 		hashOperations.delete(KEY, id);
 	}
 }

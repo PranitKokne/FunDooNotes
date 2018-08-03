@@ -17,7 +17,7 @@ public class EmailConsumer {
 	@Autowired
 	private EmailService emailService;
 
-	@RabbitListener(queues = RabbitMQConfig.queueName, containerFactory = "containerFactory")
+	@RabbitListener(queues = RabbitMQConfig.queueName)
 	public void receiveEmail(Mail mail) {
 		logger.info("message received from the queue");
 		emailService.sendEmail(mail);

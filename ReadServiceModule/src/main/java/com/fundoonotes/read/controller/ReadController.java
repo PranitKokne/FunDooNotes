@@ -2,7 +2,6 @@ package com.fundoonotes.read.controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -58,7 +57,6 @@ public class ReadController {
 		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
 	}
 
-
 	@RequestMapping(value = "/getnotes/{index}/{type}/search", method = RequestMethod.GET)
 	public ResponseEntity<List<Map<String, Object>>> getNotesBySearching(@PathVariable Map<String, String> pathValues,
 			@RequestParam("userId") String userId, @RequestParam("query_string") String queryString) {
@@ -71,16 +69,16 @@ public class ReadController {
 		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/getlabels/{index}/{type}/search", method = RequestMethod.GET)
-	public ResponseEntity<Set<String>> getAllLabelNames(@PathVariable Map<String, String> pathValues,
+	@RequestMapping(value = "/getlabeldetails/{index}/{type}/search", method = RequestMethod.GET)
+	public ResponseEntity<List<Map<Integer, String>>> getAllLabelNames(@PathVariable Map<String, String> pathValues,
 			@RequestParam("userId") String userId) {
 		String index = pathValues.get("index");
 		String type = pathValues.get("type");
-		Set<String> output = noteRepository.getAllNewLabelNames(index, type, userId);
+		List<Map<Integer, String>> output = noteRepository.getLabelDetails(index, type, userId);
 		if (output.isEmpty()) {
 			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
 		}
-		return new ResponseEntity<Set<String>>(output, HttpStatus.OK);
+		return new ResponseEntity<List<Map<Integer, String>>>(output, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/gettoken", method = RequestMethod.GET)
@@ -89,43 +87,5 @@ public class ReadController {
 		String userId = JwtTokenizer.getUserIdFromToken(token);
 		return new ResponseEntity<String>(userId, HttpStatus.OK);
 	}
-	
-	/*@RequestMapping(value = "/getremindernotes/{index}/{type}/search", method = RequestMethod.GET)
-	public ResponseEntity<List<Map<String, Object>>> getReminderNotesOfUser(
-			@PathVariable Map<String, String> pathValues, @RequestParam("userId") String userId) {
-		String index = pathValues.get("index");
-		String type = pathValues.get("type");
-		List<Map<String, Object>> output = noteRepository.getReminderNotesOfUser(index, type, userId);
-		if (output.size() == 0) {
-			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
-		}
-		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
-	}*/
-
-	
-	/*@RequestMapping(value = "/getnotesbystate/{index}/{type}/{field}/search", method = RequestMethod.GET)
-	public ResponseEntity<List<Map<String, Object>>> getNotesByState(@PathVariable Map<String, String> pathValues,
-			@RequestParam("userId") String userId) {
-		String index = pathValues.get("index");
-		String type = pathValues.get("type");
-		String field = pathValues.get("field");
-		List<Map<String, Object>> output = noteRepository.getNotesByState(index, type, field, userId);
-		if (output.size() == 0) {
-			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
-		}
-		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
-	}*/
-	
-	/*@RequestMapping(value = "/getnotesoflabel/{index}/{type}/search", method = RequestMethod.GET)
-	public ResponseEntity<List<Map<String, Object>>> getNotesByLabelName(@PathVariable Map<String, String> pathValues,
-			@RequestParam("userId") String userId, @RequestParam("labelName") String labelName) {
-		String index = pathValues.get("index");
-		String type = pathValues.get("type");
-		List<Map<String, Object>> output = noteRepository.getNotesByLabelName(index, type, userId, labelName);
-		if (output.size() == 0) {
-			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
-		}
-		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
-	}*/
 
 }

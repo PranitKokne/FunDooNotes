@@ -6,3 +6,7 @@ Fundoonotes/RemoteSystemsTempFiles/*
 Fundoonotes/Servers/*
 *.project
 *.log
+SyncService/syncservice.log
+SyncService/syncservice.log.*.*.gz
+ReadServiceModule/readservice.log
+ReadServiceModule/readservice.log.*.*.gz

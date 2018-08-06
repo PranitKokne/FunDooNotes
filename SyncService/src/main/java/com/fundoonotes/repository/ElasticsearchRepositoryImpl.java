@@ -28,7 +28,6 @@ public class ElasticsearchRepositoryImpl<T> implements ElasticsearchRepository<T
 		this.restHighlevelClient = restHighLevelClient;
 	}
 
-	
 	@Override
 	public void insertDocument(String index, String type, String id, T document) {
 		Map<?, ?> dataMap = objectMapper.convertValue(document, Map.class);

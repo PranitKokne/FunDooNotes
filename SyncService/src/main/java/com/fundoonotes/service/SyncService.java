@@ -1,15 +1,26 @@
 package com.fundoonotes.service;
 
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fundoonotes.repository.ElasticsearchRepository;
 import com.fundoonotes.repository.RedisRepository;
-import com.fundoonotes.util.ElasticSearchMapping;
+
+/******************************************************************************
+ *  
+ *
+ *  Purpose:The class acts as a syncing service. The purpose of sync service
+ *  		is to sync the message/data received from the listener in the 
+ *  		redis and elasticsearch.
+ *  		
+ *
+ *  @author  Pranit_Kokne
+ *  @version 1.0
+ *  @since   06-08-2018
+ *
+ ******************************************************************************/
 
 @Service
 public class SyncService<T> {
@@ -20,11 +31,15 @@ public class SyncService<T> {
 	@Autowired
 	ElasticsearchRepository<T> elasticSearchRepository;
 
-	@Autowired
-	ElasticSearchMapping<T> elasticSearchMapping;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(SyncService.class);
 
+	/**
+	 * Purpose: The method receives the message from the listener and sync it in the
+	 * 			redis.
+	 * 
+	 * @param message message retrieved from the listener.
+	 *            
+	 */
 	public void sendRedisDataToSyncService(Map<T, T> message) {
 		LOGGER.info("****PROCESSING THE REDIS DATA****");
 		LOGGER.info("REDIS DATA FROM SYNC SERVICE" + message.toString());
@@ -46,6 +61,13 @@ public class SyncService<T> {
 		LOGGER.error("NULL POINTER EXCEPTION WHILE RECEIVING THE DATA FROM QUEUE", NullPointerException.class);
 	}
 
+	/**
+	 * Purpose: The method receives the message from the listener and sync it in the
+	 * 			elasticsearch.
+	 * 
+	 * @param message message retrieved from the listener.
+	 *            
+	 */
 	public void sendElasticDataToSyncService(Map<T, T> message) {
 		LOGGER.info("****PROCESSING THE ELASTIC SEARCH DATA****");
 		LOGGER.info("ELASTIC DATA FROM SYNC SERVICE" + message.toString());

@@ -2,6 +2,13 @@ package com.fundoonotes.repository;
 
 import java.util.Map;
 
+/**
+ * Purpose: The interface acts as a elasticsearch repository.
+ * 
+ * @author Pranit_Kokne
+ * @version 1.0
+ * @since 06-08-2018
+ */
 public interface ElasticsearchRepository<T> {
 
 	/**
@@ -34,10 +41,13 @@ public interface ElasticsearchRepository<T> {
 	public void deleteDocument(String index, String type, String id);
 
 	/**
+	 * Purpose: This method will retrieve the document from the elasticsearch
+	 * 			index based on the document id.
+	 * 
 	 * @param index index from which the document must be retrieved.
+	 * @return document from the elasticsearch index.
 	 * @param type type of the elasticsearch index.
 	 * @param id id of the document to be retrieved.
-	 * @return
 	 */
 	public Map<T, T> getDocumentById(String index, String type, String id);
 

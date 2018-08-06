@@ -6,10 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
@@ -55,8 +60,11 @@ public class NoteRepositoryImpl implements NoteRepository {
 			SearchRequest searchRequest = new SearchRequest(index);
 			searchRequest.types(type);
 			SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-			searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("userId", userId))
-					.must(QueryBuilders.queryStringQuery(queryString)));
+			TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("userId", userId);
+			BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+			boolQueryBuilder.should(QueryBuilders.queryStringQuery(queryString).field("title").field("description"))
+					.should(nestedQueryForSearching("labels", queryString));
+			searchSourceBuilder.query(QueryBuilders.boolQuery().must(termQueryBuilder).must(boolQueryBuilder));
 			searchRequest.source(searchSourceBuilder);
 			SearchResponse searchResponse = restHighLevelClient.search(searchRequest);
 			SearchHit[] hits = searchResponse.getHits().getHits();
@@ -70,10 +78,9 @@ public class NoteRepositoryImpl implements NoteRepository {
 	}
 
 	@Override
-	public List<Map<Integer, String>> getLabelDetails(String index, String type, String userId) {
+	public List<Map<String, Object>> getLabelDetails(String index, String type, String userId) {
 		LOGGER.info("GET THE LABEL NAME AND ID");
-		List<Map<Integer, String>> lableDetails = new ArrayList<>();
-		Map<Integer, String> labels = new HashMap<>();
+		List<Map<String, Object>> lableDetails = new ArrayList<>();
 		try {
 			SearchRequest searchRequest = new SearchRequest(index);
 			searchRequest.types(type);
@@ -86,7 +93,9 @@ public class NoteRepositoryImpl implements NoteRepository {
 				Map<String, Object> sourceAsMap = label.getSourceAsMap();
 				Integer labelId = (Integer) sourceAsMap.get("labelId");
 				String labelName = (String) sourceAsMap.get("labelName");
-				labels.put(labelId, labelName);
+				Map<String, Object> labels = new HashMap<>();
+				labels.put("labelId", labelId);
+				labels.put("labelName", labelName);
 				lableDetails.add(labels);
 			}
 		} catch (IOException e) {
@@ -95,4 +104,8 @@ public class NoteRepositoryImpl implements NoteRepository {
 		return lableDetails;
 	}
 
+	public NestedQueryBuilder nestedQueryForSearching(String path, String queryString) {
+		QueryStringQueryBuilder stringQueryBuilder = QueryBuilders.queryStringQuery(queryString);
+		return new NestedQueryBuilder(path, stringQueryBuilder, ScoreMode.Avg);
+	}
 }

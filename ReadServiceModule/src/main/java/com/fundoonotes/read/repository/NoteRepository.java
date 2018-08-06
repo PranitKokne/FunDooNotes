@@ -9,6 +9,6 @@ public interface NoteRepository {
 
 	public List<Map<String, Object>> getNotesBySearching(String index, String type, String userId, String queryString);
 
-	public List<Map<Integer, String>> getLabelDetails(String index,String type,String userId);
+	public List<Map<String, Object>> getLabelDetails(String index,String type,String userId);
 	
 }

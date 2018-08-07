@@ -45,11 +45,13 @@ public class ReadController {
 		return new ResponseEntity<Object>(user, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/getnotesofuser/{index}/{type}/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/getnotesofuser/{index}/{type}", method = RequestMethod.GET)
 	public ResponseEntity<List<Map<String, Object>>> getNotesByUserId(@PathVariable Map<String, String> pathValues,
-			@RequestParam("userId") String userId) {
+			HttpServletRequest servletRequest) {
 		String index = pathValues.get("index");
 		String type = pathValues.get("type");
+		String token = servletRequest.getHeader("Authorization");
+		String userId = JwtTokenizer.getUserIdFromToken(token);
 		List<Map<String, Object>> output = noteRepository.getNotesByUserId(index, type, userId);
 		if (output.size() == 0) {
 			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
@@ -57,11 +59,13 @@ public class ReadController {
 		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/getnotes/{index}/{type}/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/getnotes/{index}/{type}", method = RequestMethod.GET)
 	public ResponseEntity<List<Map<String, Object>>> getNotesBySearching(@PathVariable Map<String, String> pathValues,
-			@RequestParam("userId") String userId, @RequestParam("query_string") String queryString) {
+			HttpServletRequest servletRequest, @RequestParam("query_string") String queryString) {
 		String index = pathValues.get("index");
 		String type = pathValues.get("type");
+		String token = servletRequest.getHeader("Authorization");
+		String userId = JwtTokenizer.getUserIdFromToken(token);
 		List<Map<String, Object>> output = noteRepository.getNotesBySearching(index, type, userId, queryString);
 		if (output.size() == 0) {
 			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
@@ -69,11 +73,13 @@ public class ReadController {
 		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/getlabeldetails/{index}/{type}/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/getlabeldetails/{index}/{type}", method = RequestMethod.GET)
 	public ResponseEntity<List<Map<String, Object>>> getAllLabelNames(@PathVariable Map<String, String> pathValues,
-			@RequestParam("userId") String userId) {
+			HttpServletRequest servletRequest) {
 		String index = pathValues.get("index");
 		String type = pathValues.get("type");
+		String token = servletRequest.getHeader("Authorization");
+		String userId = JwtTokenizer.getUserIdFromToken(token);
 		List<Map<String, Object>> output = noteRepository.getLabelDetails(index, type, userId);
 		if (output.isEmpty()) {
 			throw new ResourceNotFoundException(env.getProperty("resource.not.found"));
@@ -81,11 +87,5 @@ public class ReadController {
 		return new ResponseEntity<List<Map<String, Object>>>(output, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/gettoken", method = RequestMethod.GET)
-	public ResponseEntity<String> getIdFromToken(HttpServletRequest servletRequest) {
-		String token = servletRequest.getHeader("Authorization");
-		String userId = JwtTokenizer.getUserIdFromToken(token);
-		return new ResponseEntity<String>(userId, HttpStatus.OK);
-	}
-
+	
 }

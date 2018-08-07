@@ -2,6 +2,14 @@ package com.fundoonotes.read.model;
 
 import java.util.Date;
 
+/**
+ * Purpose: The class consist of fields which are used to send the error
+ * response to the user.
+ * 
+ * @author Pranit_Kokne
+ * @version 1.0
+ * @since 07-08-2018
+ */
 public class ErrorDetails {
 
 	private Date timeStamp;

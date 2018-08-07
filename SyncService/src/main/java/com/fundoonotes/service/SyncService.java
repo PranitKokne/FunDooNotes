@@ -9,16 +9,16 @@ import com.fundoonotes.repository.ElasticsearchRepository;
 import com.fundoonotes.repository.RedisRepository;
 
 /******************************************************************************
- *  
+ * 
  *
- *  Purpose:The class acts as a syncing service. The purpose of sync service
- *  		is to sync the message/data received from the listener in the 
- *  		redis and elasticsearch.
- *  		
+ * Purpose:The class acts as a syncing service. The purpose of sync service is
+ * to sync the message/data received from the listener in the redis and
+ * elasticsearch.
+ * 
  *
- *  @author  Pranit_Kokne
- *  @version 1.0
- *  @since   06-08-2018
+ * @author Pranit_Kokne
+ * @version 1.0
+ * @since 06-08-2018
  *
  ******************************************************************************/
 
@@ -35,10 +35,11 @@ public class SyncService<T> {
 
 	/**
 	 * Purpose: The method receives the message from the listener and sync it in the
-	 * 			redis.
+	 * redis.
 	 * 
-	 * @param message message retrieved from the listener.
-	 *            
+	 * @param message
+	 *            message retrieved from the listener.
+	 * 
 	 */
 	public void sendRedisDataToSyncService(Map<T, T> message) {
 		LOGGER.info("****PROCESSING THE REDIS DATA****");
@@ -63,10 +64,11 @@ public class SyncService<T> {
 
 	/**
 	 * Purpose: The method receives the message from the listener and sync it in the
-	 * 			elasticsearch.
+	 * elasticsearch.
 	 * 
-	 * @param message message retrieved from the listener.
-	 *            
+	 * @param message
+	 *            message retrieved from the listener.
+	 * 
 	 */
 	public void sendElasticDataToSyncService(Map<T, T> message) {
 		LOGGER.info("****PROCESSING THE ELASTIC SEARCH DATA****");

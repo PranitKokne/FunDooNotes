@@ -91,7 +91,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 			SearchHit[] hits = searchResponse.getHits().getHits();
 			for (SearchHit label : hits) {
 				Map<String, Object> sourceAsMap = label.getSourceAsMap();
-				Integer labelId = (Integer) sourceAsMap.get("labelId");
+				String labelId = Integer.toString((Integer) sourceAsMap.get("labelId"));
 				String labelName = (String) sourceAsMap.get("labelName");
 				Map<String, Object> labels = new HashMap<>();
 				labels.put("labelId", labelId);
